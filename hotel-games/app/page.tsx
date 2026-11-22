@@ -11,7 +11,7 @@ import ResolutionModal from "./components/ResolutionModal";
 import RoomHost from "./components/RoomHost";
 import RoomJoin from "./components/RoomJoin";
 import { sounds } from "./utils/audio";
-import { Smartphone, Users, Sparkles, Play, ShieldAlert, Globe } from "lucide-react";
+import { Smartphone, Sparkles, Globe } from "lucide-react";
 
 type GamePhase =
   | "home_select" // Choose between Create Room, Join Room, or Offline Mode
@@ -24,32 +24,33 @@ type GamePhase =
   | "resolution"; // Case solution and leaderboard
 
 export default function Home() {
-  const [phase, setPhase] = useState<GamePhase>("home_select");
-  const [initialRoomCode, setInitialRoomCode] = useState<string>("");
-
+  const [phase, setPhase] = useState<GamePhase>(() => {
+    if (typeof window === "undefined") return "home_select";
+    return new URLSearchParams(window.location.search).has("room")
+      ? "room_join"
+      : "home_select";
+  });
+  const [initialRoomCode, setInitialRoomCode] = useState<string>(() => {
+    if (typeof window === "undefined") return "";
+    return (
+      new URLSearchParams(window.location.search).get("room")?.toUpperCase() ??
+      ""
+    );
+  });
   // Game data
   const [playerCount, setPlayerCount] = useState<PlayerCount>(7);
   const [playerNames, setPlayerNames] = useState<string[]>([]);
   const [selectedCase, setSelectedCase] = useState<CaseData>(CASES[0]);
-  const [timerDurationSeconds, setTimerDurationSeconds] = useState<number>(15 * 60);
+  const [timerDurationSeconds, setTimerDurationSeconds] = useState<number>(
+    15 * 60,
+  );
 
   const [activePlayers, setActivePlayers] = useState<ActivePlayer[]>([]);
   const [votes, setVotes] = useState<PlayerVote[]>([]);
 
   // Room host connections ref for broadcasting events
   const peerConnectionsRef = useRef<Map<string, any>>(new Map());
-
-  // Detect URL parameter for room auto-join (e.g. ?room=IBIZ)
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const searchParams = new URLSearchParams(window.location.search);
-      const roomParam = searchParams.get("room");
-      if (roomParam) {
-        setInitialRoomCode(roomParam.toUpperCase());
-        setPhase("room_join");
-      }
-    }
-  }, []);
+  const [isOnlineMode, setIsOnlineMode] = useState(false);
 
   // Host starts game from online room
   const handleStartOnlineGame = (
@@ -57,9 +58,10 @@ export default function Home() {
     players: ActivePlayer[],
     chosenCase: CaseData,
     timerSeconds: number,
-    connections: Map<string, any>
+    connections: Map<string, any>,
   ) => {
     peerConnectionsRef.current = connections;
+    setIsOnlineMode(connections.size > 0);
 
     // Attach real-time listeners to each mobile connection to receive their votes
     connections.forEach((conn) => {
@@ -67,7 +69,9 @@ export default function Home() {
         if (data && data.type === "SUBMIT_VOTE" && data.vote) {
           sounds.playClick();
           setVotes((prev) => {
-            const filtered = prev.filter((v) => v.voterName !== data.vote.voterName);
+            const filtered = prev.filter(
+              (v) => v.voterName !== data.vote.voterName,
+            );
             return [...filtered, data.vote];
           });
         }
@@ -86,8 +90,10 @@ export default function Home() {
     count: PlayerCount,
     names: string[],
     chosenCase: CaseData,
-    timerSeconds: number
+    timerSeconds: number,
   ) => {
+    peerConnectionsRef.current.clear();
+    setIsOnlineMode(false);
     setPlayerCount(count);
     setPlayerNames(names);
     setSelectedCase(chosenCase);
@@ -124,8 +130,10 @@ export default function Home() {
 
       const methodOptions = [
         selectedCase.solution.keyMethod,
-        selectedCase.progressiveClues[0]?.impactQuestion || "Aprovechó el descuido de las demás",
-        selectedCase.progressiveClues[1]?.impactQuestion || "Utilizó la llave oculta de repuesto",
+        selectedCase.progressiveClues[0]?.impactQuestion ||
+          "Aprovechó el descuido de las demás",
+        selectedCase.progressiveClues[1]?.impactQuestion ||
+          "Utilizó la llave oculta de repuesto",
       ];
 
       peerConnectionsRef.current.forEach((conn) => {
@@ -149,7 +157,8 @@ export default function Home() {
 
     // If online, broadcast RESOLUTION to all phones
     if (peerConnectionsRef.current.size > 0) {
-      const culpritPlayer = activePlayers.find((p) => p.dossier.isCulprit) || activePlayers[0];
+      const culpritPlayer =
+        activePlayers.find((p) => p.dossier.isCulprit) || activePlayers[0];
       peerConnectionsRef.current.forEach((conn) => {
         if (conn && conn.open) {
           conn.send({
@@ -180,7 +189,8 @@ export default function Home() {
             EL <span className="neon-text-pink">CHIVATAZO</span>
           </h1>
           <p className="text-base sm:text-lg text-purple-200/80 max-w-xl mx-auto mb-10 font-light">
-            Expedientes confidenciales, coartadas, horas exactas y traiciones. ¿Cómo queréis jugar hoy?
+            Expedientes confidenciales, coartadas, horas exactas y traiciones.
+            ¿Cómo queréis jugar hoy?
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
@@ -200,7 +210,9 @@ export default function Home() {
                   Crear Sala Multijugador
                 </h2>
                 <p className="text-xs text-purple-200/80 mt-2 leading-relaxed">
-                  Muestra un <strong>código QR de sala</strong> en la tablet. Cada amiga lo escanea o escribe el código en su móvil y recibe su ficha en cuanto comience la partida.
+                  Muestra un <strong>código QR de sala</strong> en la tablet.
+                  Cada amiga lo escanea o escribe el código en su móvil y recibe
+                  su ficha en cuanto comience la partida.
                 </p>
               </div>
 
@@ -226,7 +238,9 @@ export default function Home() {
                   Unirme a una Sala
                 </h2>
                 <p className="text-xs text-purple-200/80 mt-2 leading-relaxed">
-                  ¿Una amiga ya ha creado una sala en su tablet o pantalla? Escribe aquí el <strong>código de 4 letras</strong> para recibir tu expediente confidencial.
+                  ¿Una amiga ya ha creado una sala en su tablet o pantalla?
+                  Escribe aquí el <strong>código de 4 letras</strong> para
+                  recibir tu expediente confidencial.
                 </p>
               </div>
 
@@ -244,7 +258,8 @@ export default function Home() {
               onClick={() => setPhase("offline_lobby")}
               className="text-xs text-purple-300/80 hover:text-white underline cursor-pointer"
             >
-              O jugar en una sola pantalla compartida (Modo Offline / Pase y Juegue)
+              O jugar en una sola pantalla compartida (Modo Offline / Pase y
+              Juegue)
             </button>
           </div>
         </div>
@@ -297,7 +312,7 @@ export default function Home() {
         <VotingModal
           players={activePlayers}
           gameCase={selectedCase}
-          isOnlineMode={peerConnectionsRef.current.size > 0}
+          isOnlineMode={isOnlineMode}
           onlineVotes={votes}
           onFinishVoting={handleFinishVoting}
           onBackToGame={() => setPhase("game")}
@@ -311,10 +326,15 @@ export default function Home() {
           gameCase={selectedCase}
           votes={votes}
           onPlayAgain={() => {
-            if (peerConnectionsRef.current.size > 0) {
+            if (isOnlineMode) {
               setPhase("room_host");
             } else {
-              handleStartOfflineGame(playerCount, playerNames, selectedCase, timerDurationSeconds);
+              handleStartOfflineGame(
+                playerCount,
+                playerNames,
+                selectedCase,
+                timerDurationSeconds,
+              );
             }
           }}
           onNewCase={() => setPhase("home_select")}
