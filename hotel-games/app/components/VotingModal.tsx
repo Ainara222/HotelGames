@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ActivePlayer, CaseData, PlayerVote } from "../types/game";
+import { ActivePlayer, CaseData, PlayerVote, PlayerScore } from "../types/game";
 import { sounds } from "../utils/audio";
 import { Vote, CheckCircle2, UserCheck, ShieldAlert, Clock, Smartphone, AlertCircle } from "lucide-react";
 
@@ -26,32 +26,64 @@ export default function VotingModal({
   const [offlineVotes, setOfflineVotes] = useState<PlayerVote[]>([]);
   const [showManualFallback, setShowManualFallback] = useState<boolean>(false);
 
-  // Current vote form fields for offline/manual mode
   const [selectedAccused, setSelectedAccused] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [selectedMethod, setSelectedMethod] = useState<string>("");
 
+  const [playerScores, setPlayerScores] = useState<PlayerScore[]>([]);
+
   const currentVoter = players[currentVoterIndex];
   const isLastVoter = currentVoterIndex === players.length - 1;
 
-  // Time options generated based on public timeline
+  // Options for time and method
   const timeOptions = [
     gameCase.solution.crimeTime,
     ...gameCase.publicTimeline.slice(1, 4).map((t) => t.time),
   ].filter((v, i, a) => a.indexOf(v) === i);
 
-  // Method / clue options
   const methodOptions = [
     gameCase.solution.keyMethod,
     gameCase.progressiveClues[0]?.impactQuestion || "Aprovechó el descuido en la terraza",
     gameCase.progressiveClues[1]?.impactQuestion || "Utilizó una llave oculta de repuesto",
   ];
 
-  // ==========================================
-  // ONLINE LIVE VOTING TRACKER (EACH FRIEND VOTES ON HER OWN PHONE)
-  // ==========================================
+  // Scoring logic
+  const calculateScores = (votes: PlayerVote[]): PlayerScore[] => {
+    const solution = gameCase.solution;
+    return players.map((p) => {
+      const vote = votes.find((v) => v.voterName === p.name);
+      const accusedCorrect = vote?.accusedPlayerName === solution.culpritNameRole;
+      const timeCorrect = vote?.guessedTime === solution.crimeTime;
+      const methodCorrect = vote?.guessedMethod === solution.keyMethod;
+      const totalPoints = (accusedCorrect ? 10 : 0) + (timeCorrect ? 5 : 0) + (methodCorrect ? 5 : 0);
+      const breakdown: string[] = [];
+      if (accusedCorrect) breakdown.push("Acusación correcta (+10)");
+      if (timeCorrect) breakdown.push("Hora correcta (+5)");
+      if (methodCorrect) breakdown.push("Método correcto (+5)");
+      if (breakdown.length === 0) breakdown.push("Ningún acierto");
+      return {
+        playerName: p.name,
+        roleName: p.roleName,
+        isCulprit: p.dossier.isCulprit,
+        accusedCorrectly: accusedCorrect,
+        timeCorrectly: timeCorrect,
+        methodCorrectly: methodCorrect,
+        culpritEscaped: false,
+        totalPoints,
+        breakdown,
+      } as PlayerScore;
+    });
+  };
+
+  const handleFinish = (votes: PlayerVote[]) => {
+    const scores = calculateScores(votes);
+    setPlayerScores(scores);
+    onFinishVoting(votes);
+  };
+
+  // ==================== Online voting UI ====================
   if (isOnlineMode && !showManualFallback) {
-    const allHaveVoted = players.length > 0 && players.every((p) =>
+    const allHaveVoted = players.every((p) =>
       onlineVotes.some((v) => v.voterName === p.name)
     );
 
@@ -64,19 +96,16 @@ export default function VotingModal({
           </div>
 
           <div>
-            <h1 className="text-3xl sm:text-4xl font-black text-white">
-              Emitiendo Veredictos...
-            </h1>
+            <h1 className="text-3xl sm:text-4xl font-black text-white">Emitiendo Veredictos...</h1>
             <p className="text-sm text-purple-200/80 mt-1 max-w-lg mx-auto">
               Cada amiga está seleccionando en su propio dispositivo quién es la culpable, la hora y el método.
             </p>
           </div>
 
-          {/* Real-time Voter Status Cards */}
+          {/* Real‑time voter status cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto pt-2">
             {players.map((p) => {
               const hasVoted = onlineVotes.some((v) => v.voterName === p.name);
-
               return (
                 <div
                   key={p.id}
@@ -95,16 +124,13 @@ export default function VotingModal({
                       </div>
                     </div>
                   </div>
-
                   {hasVoted ? (
                     <span className="flex items-center gap-1 text-xs font-bold text-green-400 bg-green-950 px-2.5 py-1 rounded-full border border-green-500/50">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      Voto recibido
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Voto recibido
                     </span>
                   ) : (
                     <span className="flex items-center gap-1 text-xs font-bold text-amber-300 bg-amber-950/60 px-2.5 py-1 rounded-full border border-amber-500/50">
-                      <Clock className="w-3 h-3 animate-spin" />
-                      Votando...
+                      <Clock className="w-3 h-3 animate-spin" /> Votando...
                     </span>
                   )}
                 </div>
@@ -112,18 +138,18 @@ export default function VotingModal({
             })}
           </div>
 
-          {/* Progress Banner */}
+          {/* Progress banner */}
           <div className="p-3.5 rounded-2xl bg-purple-950/60 border border-purple-800/80 text-xs text-purple-200 font-mono">
             <strong>{onlineVotes.length}</strong> de <strong>{players.length}</strong> jugadoras han votado.
           </div>
 
-          {/* Big Reveal Solution Button */}
+          {/* Reveal button */}
           <div className="pt-2">
             <button
               type="button"
               onClick={() => {
                 sounds.playClick();
-                onFinishVoting(onlineVotes);
+                handleFinish(onlineVotes);
               }}
               className="w-full py-4 rounded-2xl bg-gradient-to-r from-pink-600 via-purple-600 to-red-600 hover:from-pink-500 hover:via-purple-500 hover:to-red-500 text-white font-black text-base uppercase tracking-wider border border-white/40 shadow-2xl neon-glow-pink cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
@@ -133,15 +159,25 @@ export default function VotingModal({
             </button>
           </div>
 
+          {/* Scores after voting */}
+          {playerScores.length > 0 && (
+            <div className="mt-4 p-4 rounded-2xl bg-purple-900/60 border border-purple-700 text-sm text-purple-200">
+              <h3 className="text-lg font-bold text-white mb-2">Resultados de Puntuación</h3>
+              <ul className="space-y-1">
+                {playerScores.map((ps) => (
+                  <li key={ps.playerName} className="flex justify-between items-center">
+                    <span>{ps.playerName} ({ps.roleName})</span>
+                    <span className="font-mono">{ps.totalPoints} pts</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div className="flex items-center justify-between text-xs pt-2">
-            <button
-              type="button"
-              onClick={onBackToGame}
-              className="text-purple-300 hover:text-white underline cursor-pointer"
-            >
+            <button type="button" onClick={onBackToGame} className="text-purple-300 hover:text-white underline cursor-pointer">
               ← Volver al debate y cronómetro
             </button>
-
             <button
               type="button"
               onClick={() => setShowManualFallback(true)}
@@ -155,29 +191,23 @@ export default function VotingModal({
     );
   }
 
-  // ==========================================
-  // OFFLINE PASS & PLAY / MANUAL VOTING MODE
-  // ==========================================
+  // ==================== Offline/manual voting UI ====================
   const handleNextOfflineVote = () => {
     if (!selectedAccused || !selectedTime || !selectedMethod) {
       alert("Por favor completa las 3 preguntas antes de registrar tu voto.");
       return;
     }
-
     sounds.playClick();
-
     const newVote: PlayerVote = {
       voterName: currentVoter.name,
       accusedPlayerName: selectedAccused,
       guessedTime: selectedTime,
       guessedMethod: selectedMethod,
     };
-
     const updatedVotes = [...offlineVotes, newVote];
     setOfflineVotes(updatedVotes);
-
     if (isLastVoter) {
-      onFinishVoting(updatedVotes);
+      handleFinish(updatedVotes);
     } else {
       setSelectedAccused("");
       setSelectedTime("");
@@ -203,6 +233,7 @@ export default function VotingModal({
         </div>
 
         <div className="space-y-6">
+          {/* 1. Accused */}
           <div className="p-4 rounded-2xl bg-purple-950/40 border border-purple-800/60">
             <label className="block text-sm font-black text-white uppercase tracking-wider mb-3 flex items-center gap-2">
               <UserCheck className="w-4 h-4 text-pink-400" />
@@ -232,6 +263,7 @@ export default function VotingModal({
             </div>
           </div>
 
+          {/* 2. Time */}
           <div className="p-4 rounded-2xl bg-purple-950/40 border border-purple-800/60">
             <label className="block text-sm font-black text-white uppercase tracking-wider mb-3 flex items-center gap-2">
               <Clock className="w-4 h-4 text-purple-400" />
@@ -258,6 +290,7 @@ export default function VotingModal({
             </div>
           </div>
 
+          {/* 3. Method */}
           <div className="p-4 rounded-2xl bg-purple-950/40 border border-purple-800/60">
             <label className="block text-sm font-black text-white uppercase tracking-wider mb-3 flex items-center gap-2">
               <ShieldAlert className="w-4 h-4 text-red-400" />
@@ -284,26 +317,34 @@ export default function VotingModal({
             </div>
           </div>
 
+          {/* Confirm button */}
           <button
             type="button"
             onClick={handleNextOfflineVote}
             className="w-full py-4 rounded-2xl bg-gradient-to-r from-pink-600 via-purple-600 to-red-600 hover:from-pink-500 text-white font-black text-base uppercase tracking-wider border border-white/40 shadow-2xl neon-glow-pink cursor-pointer"
           >
             <CheckCircle2 className="w-5 h-5 inline mr-2" />
-            <span>
-              {isLastVoter
-                ? "¡REGISTRAR ÚLTIMO VOTO Y REVELAR LA SOLUCIÓN!"
-                : `CONFIRMAR VOTO DE ${currentVoter?.name.toUpperCase()} Y PASAR`}
-            </span>
+            <span>{isLastVoter ? "¡REGISTRAR ÚLTIMO VOTO Y REVELAR LA SOLUCIÓN!" : `CONFIRMAR VOTO DE ${currentVoter?.name.toUpperCase()} Y PASAR`}</span>
           </button>
         </div>
 
-        <div className="text-center mt-4">
-          <button
-            type="button"
-            onClick={onBackToGame}
-            className="text-xs text-purple-300/80 hover:text-white underline cursor-pointer"
-          >
+        {/* Scores after offline voting */}
+        {playerScores.length > 0 && (
+          <div className="mt-4 p-4 rounded-2xl bg-purple-900/60 border border-purple-700 text-sm text-purple-200">
+            <h3 className="text-lg font-bold text-white mb-2">Resultados de Puntuación</h3>
+            <ul className="space-y-1">
+              {playerScores.map((ps) => (
+                <li key={ps.playerName} className="flex justify-between items-center">
+                  <span>{ps.playerName} ({ps.roleName})</span>
+                  <span className="font-mono">{ps.totalPoints} pts</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="flex items-center justify-between text-xs pt-2">
+          <button type="button" onClick={onBackToGame} className="text-purple-300 hover:text-white underline cursor-pointer">
             ← Volver al debate y cronómetro
           </button>
         </div>

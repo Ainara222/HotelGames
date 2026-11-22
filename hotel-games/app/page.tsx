@@ -171,6 +171,7 @@ export default function Home() {
       {/* 1. Main Home Selector */}
       {phase === "home_select" && (
         <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12 text-center">
+        <img src="/logo.png" alt="El Chivatazo Logo" className="mx-auto mb-6" width="200" height="200" />
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-pink-500/40 bg-pink-950/30 text-pink-400 text-xs sm:text-sm font-semibold tracking-wider uppercase mb-3 neon-glow-pink">
             <Sparkles className="w-4 h-4 text-pink-400 animate-spin" />
             Juego Interactivo para Fiestas y Amigas
