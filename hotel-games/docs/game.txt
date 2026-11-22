@@ -1,0 +1,133 @@
+¡Ahora sí! Creo que acabamos de encontrar la mecánica buena para EL CHIVATAZO. Lo que quieres es que no sean cartas con una frase suelta, sino que cada jugadora tenga un expediente con información concreta: horarios, lugares, personas, conversaciones y acontecimientos. Así no podéis inventaros cualquier cosa, porque vuestra versión tiene que encajar con los hechos.
+
+La gracia es que todas conocéis una parte de la historia, pero ninguna tiene toda la información.
+
+🍸 EL CHIVATAZO: Expedientes secretos
+
+Ejemplo de partida: La noche de Ibiza
+
+CASO 01 · 7 JUGADORAS
+
+Contexto de la historia
+
+El sábado pasado salisteis todas de fiesta en Ibiza. A las 04:30 desaparecieron 2.000 € de la caja fuerte de vuestra villa. La caja no estaba forzada y solo siete personas tenían acceso.
+
+La propietaria asegura que alguien entró entre las 02:00 y las 04:00.
+
+Hay que descubrir quién cogió el dinero, cómo lo hizo y cuándo.
+
+1. Cada una recibe su expediente secreto
+
+La tablet se pasa de mano en mano. Cada jugadora pulsa «Ver expediente» y obtiene una ficha diferente.
+
+EXPEDIENTE 01
+
+CONFIDENCIAL
+
+AINARA
+
+TU UBICACIÓN Y MOVIMIENTOS
+
+* 01:30 — Discoteca
+    Estabas en la zona VIP con Saray.
+* 02:15 — Terraza
+    Saliste a hablar por teléfono durante aproximadamente 10 minutos.
+* 02:30 — Piscina
+    Marta te vio cerca de la piscina.
+* 03:10 — Villa
+    Regresaste con Paula.
+
+INFORMACIÓN QUE CONOCES
+
+* Viste a Lucía entrar en la villa a las 02:40.
+* Sabes que Marta tenía una copia de la llave de la caja fuerte.
+* No sabes quién cogió el dinero.
+
+Tu objetivo secreto
+
+Demuestra que no pudiste entrar en la caja fuerte durante el robo.
+
+Las otras seis jugadoras tendrán expedientes diferentes. Algunas tendrán información que confirma la de otras; otras tendrán contradicciones, pero todas tendrán horarios y ubicaciones concretos.
+
+2. La historia tiene una cronología común
+
+La tablet también muestra los acontecimientos conocidos por todas:
+
+CRONOLOGÍA DEL CASO
+
+* 01:00
+    Todas salís de la villa.
+* 02:00
+    La cámara de seguridad deja de funcionar.
+* 02:35
+    Alguien entra en la villa.
+* 03:05
+    Se detecta movimiento cerca de la caja fuerte.
+* 04:30
+    La propietaria descubre que faltan 2.000 €.
+
+3. Investigación e interrogatorio
+
+Aquí está lo divertido. No basta con contar la pista que tienes.
+
+* Podéis preguntaros dónde estabais a una hora concreta.
+* Podéis exigir que alguien explique una contradicción.
+* Podéis comparar horarios y testigos.
+* Podéis mentir sobre cómo interpretáis una pista, pero no cambiar los datos de vuestro expediente.
+* Podéis acusar a otra jugadora.
+
+La tablet puede mostrar preguntas de investigación para dinamizar la partida:
+
+* ¿Quién puede demostrar dónde estaba a las 02:35?
+* ¿Quién fue la última en tener acceso a la villa?
+* ¿Por qué dos personas recuerdan una hora diferente?
+* ¿Quién está ocultando una conversación?
+
+4. Nuevas pruebas durante la partida
+
+Para que no sea simplemente leer las cartas y hablar, cada caso tendrá dos revelaciones.
+
+NUEVA PRUEBA · MINUTO 3
+
+EL REGISTRO DEL TAXI
+
+Un taxi dejó a una persona en la villa a las 02:38. El conductor confirma que llevaba una chaqueta blanca.
+
+Ahora podéis volver a interrogaros con esta información.
+
+5. Votación y resolución
+
+Cada una selecciona en secreto:
+
+* Quién cree que robó el dinero.
+* A qué hora ocurrió.
+* Qué pista considera más importante.
+
+Después la app revela la solución completa y la puntuación.
+
+* Acertar a la culpable: 2 puntos.
+* Acertar la hora: 1 punto.
+* Acertar cómo ocurrió: 1 punto.
+* Si eres la culpable y nadie te descubre: 3 puntos extra.
+
+La clave para desarrollar esto bien
+
+Yo establecería una regla fundamental: ninguna pista puede contradecir la solución oficial del caso.
+
+Cada historia tendría una estructura fija:
+
+Elemento	Contenido
+Historia	Contexto completo del acontecimiento
+Cronología	Horarios exactos
+Lugares	Discoteca, hotel, terraza, taxi…
+Expedientes	Uno por jugadora
+Testimonios	Qué vio y escuchó cada una
+Pruebas	2-3 revelaciones progresivas
+Solución	Qué ocurrió realmente
+Objetivos	Qué debe conseguir cada jugadora
+
+Y cada caso estaría preparado para 5, 6 o 7 jugadoras, con personajes y pistas adaptados.
+
+Mi propuesta es que el juego tenga casos de diferentes temáticas, no solo robos o crímenes: una fiesta que acaba fatal, un viaje con una desaparición de dinero, una boda desastrosa, una infidelidad, un negocio fraudulento o una noche en un hotel.
+
+Así tendríais un juego de deducción social con historias completas, pero con reglas siempre iguales. Y lo mejor: podríamos crear 20 casos distintos sin tener que cambiar la programación de la aplicación.
