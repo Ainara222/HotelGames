@@ -49,7 +49,27 @@ export default function RoomHost({ onStartOnlineGame, onBack }: RoomHostProps) {
   const peerRef = useRef<any>(null);
   const connectionsMap = useRef<Map<string, any>>(new Map());
 
-  // Setup PeerJS Host & Room URL
+  // Prevent back navigation from losing session
+  useEffect(() => {
+    // Push initial state
+    window.history.pushState(null, "", window.location.href);
+    const onPopState = (e: PopStateEvent) => {
+      // Re-push state to keep user on page
+      window.history.pushState(null, "", window.location.href);
+    };
+    window.addEventListener("popstate", onPopState);
+    // Warn on unload/refresh
+    const beforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", beforeUnload);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("beforeunload", beforeUnload);
+    };
+  }, []);
+
   useEffect(() => {
     let peerInstance: any = null;
     let isCancelled = false;
