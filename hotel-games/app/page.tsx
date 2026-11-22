@@ -11,7 +11,7 @@ import ResolutionModal from "./components/ResolutionModal";
 import RoomHost from "./components/RoomHost";
 import RoomJoin from "./components/RoomJoin";
 import { sounds } from "./utils/audio";
-// import { useRouter } from "next/navigation"; // unused
+import Link from "next/link";
 import { Globe, Smartphone, Sparkles } from "lucide-react";
 
 type GamePhase =
