@@ -32,7 +32,9 @@ export default function Home() {
   const [playerCount, setPlayerCount] = useState<PlayerCount>(7);
   const [playerNames, setPlayerNames] = useState<string[]>([]);
   const [selectedCase, setSelectedCase] = useState<CaseData>(CASES[0]);
-  const [timerDurationSeconds, setTimerDurationSeconds] = useState<number>(15 * 60);
+  const [timerDurationSeconds, setTimerDurationSeconds] = useState<number>(
+    15 * 60,
+  );
 
   const [activePlayers, setActivePlayers] = useState<ActivePlayer[]>([]);
   const [votes, setVotes] = useState<PlayerVote[]>([]);
@@ -58,7 +60,7 @@ export default function Home() {
     players: ActivePlayer[],
     chosenCase: CaseData,
     timerSeconds: number,
-    connections: Map<string, any>
+    connections: Map<string, any>,
   ) => {
     peerConnectionsRef.current = connections;
 
@@ -68,7 +70,9 @@ export default function Home() {
         if (data && data.type === "SUBMIT_VOTE" && data.vote) {
           sounds.playClick();
           setVotes((prev) => {
-            const filtered = prev.filter((v) => v.voterName !== data.vote.voterName);
+            const filtered = prev.filter(
+              (v) => v.voterName !== data.vote.voterName,
+            );
             return [...filtered, data.vote];
           });
         }
@@ -87,7 +91,7 @@ export default function Home() {
     count: PlayerCount,
     names: string[],
     chosenCase: CaseData,
-    timerSeconds: number
+    timerSeconds: number,
   ) => {
     setPlayerCount(count);
     setPlayerNames(names);
@@ -125,8 +129,10 @@ export default function Home() {
 
       const methodOptions = [
         selectedCase.solution.keyMethod,
-        selectedCase.progressiveClues[0]?.impactQuestion || "Aprovechó el descuido de las demás",
-        selectedCase.progressiveClues[1]?.impactQuestion || "Utilizó la llave oculta de repuesto",
+        selectedCase.progressiveClues[0]?.impactQuestion ||
+          "Aprovechó el descuido de las demás",
+        selectedCase.progressiveClues[1]?.impactQuestion ||
+          "Utilizó la llave oculta de repuesto",
       ];
 
       peerConnectionsRef.current.forEach((conn) => {
@@ -150,7 +156,8 @@ export default function Home() {
 
     // If online, broadcast RESOLUTION to all phones
     if (peerConnectionsRef.current.size > 0) {
-      const culpritPlayer = activePlayers.find((p) => p.dossier.isCulprit) || activePlayers[0];
+      const culpritPlayer =
+        activePlayers.find((p) => p.dossier.isCulprit) || activePlayers[0];
       peerConnectionsRef.current.forEach((conn) => {
         if (conn && conn.open) {
           conn.send({
@@ -169,7 +176,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen flex flex-col justify-between py-4 sm:py-6 relative">
-
       {/* 1. Main Home Selector */}
       {phase === "home_select" && (
         <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12 text-center">
@@ -182,9 +188,15 @@ export default function Home() {
             EL <span className="neon-text-pink">CHIVATAZO</span>
           </h1>
           <p className="text-base sm:text-lg text-purple-200/80 max-w-xl mx-auto mb-10 font-light">
-            Expedientes confidenciales, coartadas, horas exactas y traiciones. ¿Cómo queréis jugar hoy?
+            Expedientes confidenciales, coartadas, horas exactas y traiciones.
+            ¿Cómo queréis jugar hoy?
+            <Link
+              href="/offline"
+              className="inline-block mt-4 px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white rounded-md"
+            >
+              Modo Offline
+            </Link>
           </p>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {/* Mode A: Create Room (Host screen for iPad / Laptop) */}
             <div
@@ -202,7 +214,15 @@ export default function Home() {
                   Crear Sala Multijugador
                 </h2>
                 <p className="text-xs text-purple-200/80 mt-2 leading-relaxed">
-                  Muestra un <strong>código QR de sala</strong> en la tablet. Cada amiga lo escanea o escribe el código en su móvil y recibe su ficha en cuanto comience la partida.
+                  Muestra un <strong>código QR de sala</strong> en la tablet.
+                  Cada amiga lo escanea o escribe el código en su móvil y recibe
+                  su ficha en cuanto comience la partida.
+                  <Link
+                    href="/offline"
+                    className="inline-block mt-4 px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white rounded-md"
+                  >
+                    Modo Offline
+                  </Link>
                 </p>
               </div>
 
@@ -228,7 +248,15 @@ export default function Home() {
                   Unirme a una Sala
                 </h2>
                 <p className="text-xs text-purple-200/80 mt-2 leading-relaxed">
-                  ¿Una amiga ya ha creado una sala en su tablet o pantalla? Escribe aquí el <strong>código de 4 letras</strong> para recibir tu expediente confidencial.
+                  ¿Una amiga ya ha creado una sala en su tablet o pantalla?
+                  Escribe aquí el <strong>código de 4 letras</strong> para
+                  recibir tu expediente confidencial.
+                  <Link
+                    href="/offline"
+                    className="inline-block mt-4 px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white rounded-md"
+                  >
+                    Modo Offline
+                  </Link>
                 </p>
               </div>
 
@@ -246,7 +274,8 @@ export default function Home() {
               onClick={() => setPhase("offline_lobby")}
               className="text-xs text-purple-300/80 hover:text-white underline cursor-pointer"
             >
-              O jugar en una sola pantalla compartida (Modo Offline / Pase y Juegue)
+              O jugar en una sola pantalla compartida (Modo Offline / Pase y
+              Juegue)
             </button>
           </div>
         </div>
@@ -316,7 +345,12 @@ export default function Home() {
             if (peerConnectionsRef.current.size > 0) {
               setPhase("room_host");
             } else {
-              handleStartOfflineGame(playerCount, playerNames, selectedCase, timerDurationSeconds);
+              handleStartOfflineGame(
+                playerCount,
+                playerNames,
+                selectedCase,
+                timerDurationSeconds,
+              );
             }
           }}
           onNewCase={() => setPhase("home_select")}
