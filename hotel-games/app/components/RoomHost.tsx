@@ -17,7 +17,8 @@ import {
   ShieldCheck,
   X,
   Plus,
-  Shuffle
+  Shuffle,
+  Beaker
 } from "lucide-react";
 
 interface RoomHostProps {
@@ -42,7 +43,8 @@ export default function RoomHost({ onStartOnlineGame, onBack }: RoomHostProps) {
   const [manualNameInput, setManualNameInput] = useState<string>("");
 
   // Game config
-  const [selectedCaseId, setSelectedCaseId] = useState<number>(1);
+  const [isTestMode, setIsTestMode] = useState<boolean>(false);
+
   const [isRandomCase, setIsRandomCase] = useState<boolean>(false);
   const [timerMinutes, setTimerMinutes] = useState<number>(15);
 
@@ -163,7 +165,7 @@ export default function RoomHost({ onStartOnlineGame, onBack }: RoomHostProps) {
     connectionsMap.current.delete(name);
   };
 
-  const handleStartGame = () => {
+  const handleStartGame = () => => {
     if (connectedPlayers.length < 4) {
       alert("Hacen falta al menos 4 jugadoras para iniciar la partida.");
       return;
@@ -242,7 +244,22 @@ export default function RoomHost({ onStartOnlineGame, onBack }: RoomHostProps) {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {/* Tester shortcut */}
+          <button
+            type="button"
+            onClick={() => {
+              // Dummy participants for test mode
+              setConnectedPlayers(['Ana', 'Berta', 'Clara', 'Diana']);
+              // Ensure state updates before starting
+              setTimeout(() => {
+                handleStartGame();
+              }, 0);
+            }}
+            className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-950/80 border border-purple-500/50 text-pink-300 text-xs font-bold uppercase tracking-wider hover:bg-purple-900"
+          >
+            <Beaker className="w-4 h-4" />
+            Tester
+          </button>
         {/* Left Col: Big Room QR Code (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
           <div className="glass-panel p-6 rounded-3xl border border-pink-500/60 neon-glow-pink text-center">
