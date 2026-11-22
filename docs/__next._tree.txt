@@ -1,3 +1,0 @@
-:HL["/HotelGames/_next/static/chunks/3_oqcr5731bdo.css","style"]
-1:[["children",{"s":"__PAGE__","h":160}]]
-0:{"b":"9qiLnh-kgqH-c4aooIO02","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
