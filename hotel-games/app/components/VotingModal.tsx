@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ActivePlayer, CaseData, PlayerVote, PlayerScore } from "../types/game";
 import { sounds } from "../utils/audio";
 import { Vote, CheckCircle2, UserCheck, ShieldAlert, Clock, Smartphone, AlertCircle } from "lucide-react";
@@ -46,6 +46,7 @@ export default function VotingModal({
     gameCase.progressiveClues[0]?.impactQuestion || "Aprovechó el descuido en la terraza",
     gameCase.progressiveClues[1]?.impactQuestion || "Utilizó una llave oculta de repuesto",
   ];
+
 
   // Scoring logic
   const calculateScores = (votes: PlayerVote[]): PlayerScore[] => {
