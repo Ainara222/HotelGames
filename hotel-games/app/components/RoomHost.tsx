@@ -37,13 +37,13 @@ export default function RoomHost({ onStartOnlineGame, onBack }: RoomHostProps) {
   const [joinUrl, setJoinUrl] = useState<string>("");
   const [roomQrUrl, setRoomQrUrl] = useState<string>("");
   const [copied, setCopied] = useState<boolean>(false);
-
+const [selectedCaseId, setSelectedCaseId] = useState<number>(CASES[0].id);
   // Connected players
   const [connectedPlayers, setConnectedPlayers] = useState<string[]>([]);
   const [manualNameInput, setManualNameInput] = useState<string>("");
 
   // Game config
-  const [isTestMode, setIsTestMode] = useState<boolean>(false);
+  const [isTesterMode, setIsTesterMode] = useState<boolean>(false);
 
   const [isRandomCase, setIsRandomCase] = useState<boolean>(false);
   const [timerMinutes, setTimerMinutes] = useState<number>(15);
@@ -165,7 +165,7 @@ export default function RoomHost({ onStartOnlineGame, onBack }: RoomHostProps) {
     connectionsMap.current.delete(name);
   };
 
-  const handleStartGame = () => => {
+  const handleStartGame = () => {
     if (connectedPlayers.length < 4) {
       alert("Hacen falta al menos 4 jugadoras para iniciar la partida.");
       return;
@@ -396,11 +396,7 @@ export default function RoomHost({ onStartOnlineGame, onBack }: RoomHostProps) {
                   sounds.playClick();
                   setIsRandomCase(!isRandomCase);
                 }}
-                className={`px-2.5 py-1 rounded-full text-xs font-bold border cursor-pointer ${
-                  isRandomCase
-                    ? "bg-pink-600 border-pink-400 text-white neon-glow-pink"
-                    : "bg-purple-950/60 border-purple-800 text-purple-300"
-                }`}
+                className={"px-2.5 py-1 rounded-full text-xs font-bold border cursor-pointer " + (isRandomCase ? "bg-pink-600 border-pink-400 text-white neon-glow-pink" : "bg-purple-950/60 border-purple-800 text-purple-300")}
               >
                 🎲 {isRandomCase ? "¡Caso Sorpresa!" : "Aleatorio"}
               </button>
@@ -459,7 +455,6 @@ export default function RoomHost({ onStartOnlineGame, onBack }: RoomHostProps) {
             </button>
           </div>
         </div>
-      </div>
-    </div>
+      </div>            
   );
 }

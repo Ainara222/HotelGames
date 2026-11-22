@@ -11,7 +11,8 @@ import ResolutionModal from "./components/ResolutionModal";
 import RoomHost from "./components/RoomHost";
 import RoomJoin from "./components/RoomJoin";
 import { sounds } from "./utils/audio";
-import { Smartphone, Users, Sparkles, Play, ShieldAlert, Globe } from "lucide-react";
+// import { useRouter } from "next/navigation"; // unused
+import { Globe, Smartphone, Sparkles } from "lucide-react";
 
 type GamePhase =
   | "home_select" // Choose between Create Room, Join Room, or Offline Mode
@@ -167,7 +168,8 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col justify-between py-4 sm:py-6">
+    <main className="min-h-screen flex flex-col justify-between py-4 sm:py-6 relative">
+
       {/* 1. Main Home Selector */}
       {phase === "home_select" && (
         <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12 text-center">
