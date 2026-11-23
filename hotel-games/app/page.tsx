@@ -191,13 +191,6 @@ export default function Home() {
           </h1>
           <p className="text-base sm:text-lg text-purple-200/80 max-w-xl mx-auto mb-10 font-light">
             Expedientes confidenciales, coartadas, horas exactas y traiciones.
-            ¿Cómo queréis jugar hoy?
-            <Link
-              href="/offline"
-              className="inline-block mt-4 px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white rounded-md"
-            >
-              Modo Offline
-            </Link>
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {/* Mode A: Create Room (Host screen for iPad / Laptop) */}
@@ -219,12 +212,6 @@ export default function Home() {
                   Muestra un <strong>código QR de sala</strong> en la tablet.
                   Cada amiga lo escanea o escribe el código en su móvil y recibe
                   su ficha en cuanto comience la partida.
-                  <Link
-                    href="/offline"
-                    className="inline-block mt-4 px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white rounded-md"
-                  >
-                    Modo Offline
-                  </Link>
                 </p>
               </div>
 
@@ -253,12 +240,6 @@ export default function Home() {
                   ¿Una amiga ya ha creado una sala en su tablet o pantalla?
                   Escribe aquí el <strong>código de 4 letras</strong> para
                   recibir tu expediente confidencial.
-                  <Link
-                    href="/offline"
-                    className="inline-block mt-4 px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white rounded-md"
-                  >
-                    Modo Offline
-                  </Link>
                 </p>
               </div>
 
