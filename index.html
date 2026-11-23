@@ -9,6 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#080312">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"></script>
   <style>
     :root {
       --background: #080312;
@@ -3406,8 +3407,7 @@ var qrcode = function() {
       // Room Host state
       roomCode: generateRoomCode(),
       connectedPlayers: [],
-      peerConnections: {}, // playerName -> DataConnection
-      hostPeer: null,
+      hostMqtt: null,
       hostPeerReady: false,
       selectedCaseId: 1,
       isRandomCase: false,
@@ -3417,15 +3417,14 @@ var qrcode = function() {
       // Player Client state
       joinRoomCodeInput: "",
       playerNameInput: "",
-      clientPeer: null,
-      clientConn: null,
+      clientMqtt: null,
+      clientJoinInterval: null,
       clientPhase: "input", // input, connecting, waiting, in_game, voting, resolution
       clientError: null,
-      hostHeartbeat: null,
-      clientHeartbeat: null,
       myDossier: null,
       myCaseInfo: null,
       isDossierRevealed: false,
+      resolutionInfo: null,
       // Voting
       votes: [],
       selectedAccused: "",
@@ -3446,22 +3445,10 @@ var qrcode = function() {
       offlineCount: 7
     };
 
-    const PEER_CONFIG = {
-      debug: 1,
-      config: {
-        iceServers: [
-          { urls: "stun:stun.l.google.com:19302" },
-          { urls: "stun:stun1.l.google.com:19302" },
-          { urls: "stun:stun2.l.google.com:19302" },
-          { urls: "stun:stun3.l.google.com:19302" },
-          { urls: "stun:stun4.l.google.com:19302" },
-          { urls: "stun:stun.cloudflare.com:3478" },
-          { urls: "stun:stun.services.mozilla.com" },
-          { urls: "stun:stun.stunprotocol.org:3478" }
-        ],
-        iceCandidatePoolSize: 10,
-      },
-    };
+    const MQTT_BROKERS = [
+      "wss://broker.emqx.io:8084/mqtt",
+      "wss://broker.hivemq.com:8884/mqtt"
+    ];
 
     function checkUrlParams() {
       const params = new URLSearchParams(window.location.search);
@@ -3473,71 +3460,84 @@ var qrcode = function() {
     }
 
     function initHostPeer() {
-      if (state.hostPeer) return;
-      const peerId = "chivatazo-room-" + state.roomCode.toLowerCase();
+      if (state.hostMqtt && state.hostMqtt.connected) {
+        state.hostPeerReady = true;
+        render();
+        return;
+      }
+
+      state.hostPeerReady = false;
+      if (state.hostMqtt) {
+        try { state.hostMqtt.end(true); } catch(e){}
+        state.hostMqtt = null;
+      }
+
       try {
-        state.hostPeer = new Peer(peerId, PEER_CONFIG);
-        state.hostPeer.on("open", id => {
-          console.log("Host room peer ready:", id);
+        const broker = MQTT_BROKERS[0];
+        const client = mqtt.connect(broker, {
+          clientId: "host_" + state.roomCode.toLowerCase() + "_" + Math.random().toString(16).slice(2, 8),
+          clean: true,
+          connectTimeout: 5000,
+          reconnectPeriod: 2000
+        });
+
+        state.hostMqtt = client;
+
+        client.on("connect", () => {
+          console.log("Host conectado por WebSocket:", broker);
           state.hostPeerReady = true;
+
+          const joinTopic = "hotelgames/v2/" + state.roomCode.toLowerCase() + "/join";
+          const voteTopic = "hotelgames/v2/" + state.roomCode.toLowerCase() + "/vote";
+
+          client.subscribe([joinTopic, voteTopic], (err) => {
+            if (!err) {
+              console.log("Host escuchando en:", joinTopic, voteTopic);
+            }
+          });
           render();
         });
-        state.hostPeer.on("disconnected", () => {
-          console.warn("Host disconnected from signaling broker, reconnecting...");
-          try { state.hostPeer.reconnect(); } catch (e) {}
-        });
 
-        // Heartbeat periódico cada 5s para mantener abiertas las rutas NAT en redes móviles (4G/5G)
-        if (state.hostHeartbeat) clearInterval(state.hostHeartbeat);
-        state.hostHeartbeat = setInterval(() => {
-          if (state.peerConnections) {
-            Object.values(state.peerConnections).forEach(cn => {
-              if (cn && cn.open) {
-                try { cn.send({ type: "PING" }); } catch (e) {}
-              }
-            });
-          }
-        }, 5000);
-
-        state.hostPeer.on("connection", conn => {
-          conn.on("data", data => {
+        client.on("message", (topic, message) => {
+          try {
+            const data = JSON.parse(message.toString());
             if (!data) return;
-
-            if (data.type === "PING") {
-              try { conn.send({ type: "PONG" }); } catch (e) {}
-              return;
-            }
 
             if (data.type === "JOIN" && data.playerName) {
               const name = data.playerName.trim();
               if (!name) return;
-              state.peerConnections[name] = conn;
+
               if (!state.connectedPlayers.includes(name)) {
                 sounds.playClick();
                 state.connectedPlayers.push(name);
                 render();
               }
-              conn.send({ type: "JOIN_ACCEPTED", roomCode: state.roomCode });
+
+              // Confirmar recepción a la jugadora
+              client.publish("hotelgames/v2/" + state.roomCode.toLowerCase() + "/player/" + name, JSON.stringify({
+                type: "JOIN_ACCEPTED",
+                roomCode: state.roomCode
+              }));
             } else if (data.type === "SUBMIT_VOTE" && data.vote) {
+              state.votes = state.votes.filter(v => v.voterName !== data.vote.voterName);
               state.votes.push(data.vote);
               render();
             }
-          });
-        });
-        state.hostPeer.on("error", err => {
-          console.warn("Host peer warning:", err);
-          if (err && (err.type === "unavailable-id" || err.type === "network")) {
-            console.warn("Código en uso o error de red, regenerando código...");
-            if (state.hostPeer) { try { state.hostPeer.destroy(); } catch (e) {} }
-            state.hostPeer = null;
-            state.roomCode = generateRoomCode();
-            state.hostPeerReady = false;
-            initHostPeer();
-            render();
+          } catch(e) {
+            console.error("Error procesando mensaje host MQTT:", e);
           }
         });
+
+        client.on("error", (err) => {
+          console.warn("Host MQTT warning:", err);
+        });
+
+        client.on("offline", () => {
+          state.hostPeerReady = false;
+          render();
+        });
       } catch (e) {
-        console.error("PeerJS init error", e);
+        console.error("MQTT Host init error", e);
       }
     }
 
@@ -3552,65 +3552,73 @@ var qrcode = function() {
       state.clientError = null;
       render();
 
-      if (state.clientPeer) {
-        try { state.clientPeer.destroy(); } catch (e) {}
-        state.clientPeer = null;
+      if (state.clientMqtt) {
+        try { state.clientMqtt.end(true); } catch (e) {}
+        state.clientMqtt = null;
       }
-      if (state.clientHeartbeat) {
-        clearInterval(state.clientHeartbeat);
-        state.clientHeartbeat = null;
+      if (state.clientJoinInterval) {
+        clearInterval(state.clientJoinInterval);
+        state.clientJoinInterval = null;
       }
-
-      const randSuffix = Math.floor(Math.random() * 9000 + 1000);
-      const clientPeerId = "chivatazo-player-" + code.toLowerCase() + "-" + name.toLowerCase().replace(/[^a-z0-9]/g, "") + "-" + randSuffix;
-      const hostPeerId = "chivatazo-room-" + code.toLowerCase();
 
       let isConnected = false;
       const timeoutId = setTimeout(() => {
-        if (!isConnected) {
-          state.clientError = "Tiempo de espera agotado conectando con la sala " + code + ". Comprueba que la sala siga abierta en la tablet/pantalla de la anfitriona y vuelve a intentarlo.";
+        if (!isConnected && state.clientPhase === "connecting") {
+          state.clientError = "Tiempo de espera agotado buscando la sala " + code + ". Comprueba que el código sea correcto y la anfitriona tenga abierta la pantalla de sala.";
           state.clientPhase = "input";
           render();
-          try { state.clientPeer.destroy(); } catch (e) {}
+          if (state.clientJoinInterval) clearInterval(state.clientJoinInterval);
+          if (state.clientMqtt) { try { state.clientMqtt.end(true); } catch(e){} }
         }
-      }, 15000);
+      }, 10000);
 
       try {
-        state.clientPeer = new Peer(clientPeerId, PEER_CONFIG);
-        state.clientPeer.on("disconnected", () => {
-          console.warn("Cliente desconectado de señalización, reconectando...");
-          try { state.clientPeer.reconnect(); } catch (e) {}
+        const broker = MQTT_BROKERS[0];
+        const client = mqtt.connect(broker, {
+          clientId: "player_" + code.toLowerCase() + "_" + name.toLowerCase().replace(/[^a-z0-9]/g, "") + "_" + Math.random().toString(16).slice(2, 8),
+          clean: true,
+          connectTimeout: 5000,
+          reconnectPeriod: 2000
         });
 
-        state.clientPeer.on("open", () => {
-          const conn = state.clientPeer.connect(hostPeerId, { reliable: true });
-          state.clientConn = conn;
+        state.clientMqtt = client;
 
-          conn.on("open", () => {
-            isConnected = true;
-            clearTimeout(timeoutId);
-            conn.send({ type: "JOIN", playerName: name });
-            state.clientPhase = "waiting";
-            render();
+        client.on("connect", () => {
+          console.log("Cliente conectado a broker WebSocket:", broker);
+          const broadcastTopic = "hotelgames/v2/" + code.toLowerCase() + "/broadcast";
+          const playerTopic = "hotelgames/v2/" + code.toLowerCase() + "/player/" + name;
 
-            // Heartbeat de mantenimiento NAT para móvil (4G/5G)
-            state.clientHeartbeat = setInterval(() => {
-              if (conn && conn.open) {
-                try { conn.send({ type: "PING" }); } catch (e) {}
-              }
-            }, 5000);
+          client.subscribe([broadcastTopic, playerTopic], (err) => {
+            if (!err) {
+              const sendJoin = () => {
+                client.publish("hotelgames/v2/" + code.toLowerCase() + "/join", JSON.stringify({
+                  type: "JOIN",
+                  playerName: name
+                }));
+              };
+
+              // Enviar de inmediato y reintentar cada 1s hasta recibir aceptación
+              sendJoin();
+              state.clientJoinInterval = setInterval(() => {
+                if (!isConnected && state.clientPhase === "connecting") {
+                  sendJoin();
+                } else {
+                  if (state.clientJoinInterval) clearInterval(state.clientJoinInterval);
+                }
+              }, 1000);
+            }
           });
+        });
 
-          conn.on("data", data => {
+        client.on("message", (topic, message) => {
+          try {
+            const data = JSON.parse(message.toString());
             if (!data) return;
 
-            if (data.type === "PING") {
-              try { conn.send({ type: "PONG" }); } catch (e) {}
-              return;
-            }
-            if (data.type === "PONG") return;
-
             if (data.type === "JOIN_ACCEPTED") {
+              isConnected = true;
+              clearTimeout(timeoutId);
+              if (state.clientJoinInterval) clearInterval(state.clientJoinInterval);
               state.clientPhase = "waiting";
               render();
             } else if (data.type === "GAME_STARTED") {
@@ -3631,33 +3639,17 @@ var qrcode = function() {
               try { confetti({ particleCount: 120, spread: 90, origin: { y: 0.6 } }); } catch {}
               render();
             }
-          });
-
-          conn.on("error", err => {
-            console.error("Client conn error:", err);
-            clearTimeout(timeoutId);
-            if (state.clientHeartbeat) clearInterval(state.clientHeartbeat);
-            state.clientError = "Error de conexión con la sala " + code + ". Comprueba que el código sea correcto y la anfitriona tenga la sala abierta.";
-            state.clientPhase = "input";
-            render();
-          });
-
-          conn.on("close", () => {
-            if (state.clientHeartbeat) clearInterval(state.clientHeartbeat);
-          });
+          } catch(e) {
+            console.error("Error procesando mensaje cliente MQTT:", e);
+          }
         });
 
-        state.clientPeer.on("error", err => {
-          console.error("Client peer error:", err);
-          clearTimeout(timeoutId);
-          if (state.clientHeartbeat) clearInterval(state.clientHeartbeat);
-          state.clientError = "No se pudo conectar a la sala " + code + ". Comprueba que el código sea correcto.";
-          state.clientPhase = "input";
-          render();
+        client.on("error", (err) => {
+          console.warn("Client MQTT warning:", err);
         });
       } catch (e) {
         clearTimeout(timeoutId);
-        state.clientError = "Error al iniciar conexión WebRTC.";
+        state.clientError = "Error al iniciar conexión WebSocket.";
         state.clientPhase = "input";
         render();
       }
@@ -3692,11 +3684,10 @@ var qrcode = function() {
         };
       });
 
-      // Broadcast secret dossier to each friend's mobile phone!
-      state.activePlayers.forEach(player => {
-        const conn = state.peerConnections[player.name];
-        if (conn && conn.open) {
-          conn.send({
+      // Broadcast secret dossier to each friend's mobile phone via MQTT WebSocket!
+      if (state.hostMqtt && state.hostMqtt.connected) {
+        state.activePlayers.forEach(player => {
+          const payload = JSON.stringify({
             type: "GAME_STARTED",
             playerName: player.name,
             dossier: player.dossier,
@@ -3709,8 +3700,10 @@ var qrcode = function() {
               publicTimeline: chosenCase.publicTimeline
             }
           });
-        }
-      });
+          const playerTopic = "hotelgames/v2/" + state.roomCode.toLowerCase() + "/player/" + player.name;
+          state.hostMqtt.publish(playerTopic, payload);
+        });
+      }
 
       state.view = "game";
       state.secondsRemaining = state.timerMinutes * 60;
@@ -3842,7 +3835,7 @@ var qrcode = function() {
                 <div class="text-[11px] text-purple-300 font-bold uppercase">Código para escribir:</div>
                 <div class="text-3xl font-black font-mono text-white tracking-widest neon-text-pink">${state.roomCode}</div>
                 <button type="button" onclick="
-                  if (state.hostPeer) { try { state.hostPeer.destroy(); } catch(e){} state.hostPeer = null; }
+                  if (state.hostMqtt) { try { state.hostMqtt.end(true); } catch(e){} state.hostMqtt = null; }
                   state.roomCode = generateRoomCode();
                   state.hostPeerReady = false;
                   initHostPeer();
@@ -3917,7 +3910,7 @@ var qrcode = function() {
               </div>
 
               <div class="flex items-center gap-3">
-                <button type="button" onclick="if(state.hostPeer){ try{state.hostPeer.destroy();}catch(e){} state.hostPeer = null; state.hostPeerReady = false; } state.view = 'home_select'; render();" class="px-4 py-4 rounded-2xl bg-purple-950 text-purple-300 text-xs font-bold border border-purple-800 cursor-pointer">Volver</button>
+                <button type="button" onclick="if(state.hostMqtt){ try{state.hostMqtt.end(true);}catch(e){} state.hostMqtt = null; state.hostPeerReady = false; } state.view = 'home_select'; render();" class="px-4 py-4 rounded-2xl bg-purple-950 text-purple-300 text-xs font-bold border border-purple-800 cursor-pointer">Volver</button>
                 <button type="button" onclick="startOnlineHostGame()" class="flex-1 py-4 rounded-2xl bg-gradient-to-r from-pink-600 via-purple-600 to-red-600 text-white font-black text-sm uppercase border border-white/40 shadow-2xl neon-glow-pink cursor-pointer">
                   🚀 ¡EMPEZAR PARTIDA Y ENVIAR FICHAS A LOS MÓVILES!
                 </button>
@@ -3975,9 +3968,9 @@ var qrcode = function() {
               <span class="text-xs px-2.5 py-0.5 rounded-full bg-purple-950 text-pink-300 font-bold border border-pink-500/50 uppercase">CONECTANDO A LA SALA...</span>
               <h2 class="text-2xl font-black text-white">Buscando sala <span class="neon-text-pink">${state.joinRoomCodeInput}</span></h2>
               <div class="p-4 rounded-2xl bg-purple-950/60 border border-purple-800 text-xs text-purple-200">
-                ⏳ Conectando mediante servidores STUN/TURN globales (compatible con 4G, 5G y distintas redes WiFi)...
+                ⏳ Conectando mediante WebSocket al servidor... (compatible con 4G, 5G y distintas redes WiFi)
               </div>
-              <button type="button" onclick="state.clientPhase = 'input'; if(state.clientPeer) state.clientPeer.destroy(); render();" class="mt-4 px-4 py-2 rounded-xl bg-purple-950/80 text-purple-300 text-xs border border-purple-800 hover:text-white cursor-pointer">
+              <button type="button" onclick="state.clientPhase = 'input'; if(state.clientMqtt){ try{state.clientMqtt.end(true);}catch(e){} state.clientMqtt = null; } if(state.clientJoinInterval) clearInterval(state.clientJoinInterval); render();" class="mt-4 px-4 py-2 rounded-xl bg-purple-950/80 text-purple-300 text-xs border border-purple-800 hover:text-white cursor-pointer">
                 Cancelar
               </button>
             </div>
@@ -4090,8 +4083,8 @@ var qrcode = function() {
                   const mth = document.getElementById('methodInput').value.trim();
                   if (!acc) { alert('Indica a quién acusas.'); return; }
                   state.hasVoted = true;
-                  if (state.clientConn) {
-                    state.clientConn.send({
+                  if (state.clientMqtt && state.clientMqtt.connected) {
+                    state.clientMqtt.publish('hotelgames/v2/' + state.joinRoomCodeInput.trim().toLowerCase() + '/vote', JSON.stringify({
                       type: 'SUBMIT_VOTE',
                       vote: {
                         voterName: state.playerNameInput,
@@ -4099,7 +4092,7 @@ var qrcode = function() {
                         guessedTime: tm || 'Hora aproximada',
                         guessedMethod: mth || 'Pista determinante'
                       }
-                    });
+                    }));
                   }
                   sounds.playClick();
                   render();
@@ -4168,7 +4161,7 @@ var qrcode = function() {
 
           <div class="flex items-center justify-between pt-4 border-t border-purple-800">
             <div class="text-xs text-purple-300">Todas las jugadoras tienen ya su ficha en sus móviles.</div>
-            <button type="button" onclick="state.view = 'voting'; if(state.peerConnections) Object.values(state.peerConnections).forEach(cn => cn.send({type:'VOTING_STARTED'})); sounds.playClick(); render();" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 text-white font-black text-base uppercase border border-white/40 shadow-2xl cursor-pointer">
+            <button type="button" onclick="state.view = 'voting'; if(state.hostMqtt && state.hostMqtt.connected) state.hostMqtt.publish('hotelgames/v2/' + state.roomCode.toLowerCase() + '/broadcast', JSON.stringify({type:'VOTING_STARTED'})); sounds.playClick(); render();" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 text-white font-black text-base uppercase border border-white/40 shadow-2xl cursor-pointer">
               🗳️ ¡IR A LA VOTACIÓN FINAL!
             </button>
           </div>
@@ -4198,7 +4191,7 @@ var qrcode = function() {
 
             <div class="text-xs font-mono text-purple-300">${state.votes.length} de ${state.activePlayers.length} votos recibidos</div>
 
-            <button type="button" onclick="state.view = 'resolution'; sounds.playRevealFanfare(); if(state.peerConnections) Object.values(state.peerConnections).forEach(cn => cn.send({type:'GAME_RESOLUTION', culpritName: (state.activePlayers.find(p=>p.dossier.isCulprit)||state.activePlayers[0]).name, solutionStory: state.activeCase.solution.fullStory})); try{confetti({particleCount:120,spread:90,origin:{y:0.6}});}catch{} render();" class="w-full py-4 rounded-2xl bg-gradient-to-r from-pink-600 via-purple-600 to-red-600 text-white font-black text-sm uppercase cursor-pointer">
+            <button type="button" onclick="state.view = 'resolution'; sounds.playRevealFanfare(); if(state.hostMqtt && state.hostMqtt.connected){ const _culprit=(state.activePlayers.find(p=>p.dossier.isCulprit)||state.activePlayers[0]); state.hostMqtt.publish('hotelgames/v2/' + state.roomCode.toLowerCase() + '/broadcast', JSON.stringify({type:'GAME_RESOLUTION', culpritName:_culprit.name, solutionStory:state.activeCase.solution.fullStory})); } try{confetti({particleCount:120,spread:90,origin:{y:0.6}});}catch{} render();" class="w-full py-4 rounded-2xl bg-gradient-to-r from-pink-600 via-purple-600 to-red-600 text-white font-black text-sm uppercase cursor-pointer">
               🎉 ¡VER LA SOLUCIÓN FINAL Y PUNTUACIONES!
             </button>
           </div>
