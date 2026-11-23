@@ -2334,5 +2334,2244 @@ export const CASES: CaseData[] = [
         }
       }
     ])
+  },
+  {
+    id: 11,
+    slug: "muerte-en-la-boda-del-payaso",
+    title: "Muerte en la Boda del Payaso",
+    subtitle: "El animador infantil aparece ahogado en la tarta nupcial",
+    category: "Humor Negro & Misterio",
+    emoji: "🤡",
+    location: "Finca Los Girasoles, salón de banquetes",
+    incidentTime: "A las 18:10, durante el brindis",
+    synopsis:
+      "El payaso Chispa, contratado para animar la boda, aparece ahogado dentro de la tarta nupcial de cinco pisos. La novia jura que él solo iba a hacer un truco de magia. El pastelero llora por su obra. La abuela del novio aplaude.",
+    publicTimeline: [
+      { time: "17:30", description: "Chispa hace su número de magia con globos.", location: "Jardín" },
+      { time: "17:50", description: "Chispa dice que va a la cocina a 'preparar su gran truco final'.", location: "Cocina" },
+      { time: "18:10", description: "La tarta se desmorona y aparece una pierna con zapato de payaso.", location: "Salón de Banquetes" },
+      { time: "18:15", description: "La novia se desmaya y la abuela pide más tarta.", location: "Salón de Banquetes" },
+      { time: "18:30", description: "Se bloquea la finca y se retiene a los invitados.", location: "Finca" }
+    ],
+    progressiveClues: [
+      {
+        minute: 3,
+        title: "El Zapato de Payaso con Crema Pastelera",
+        badge: "PRUEBA 1 · MIN 3",
+        description: "El zapato de Chispa tiene restos de crema pastelera y una sustancia somnífera. Alguien lo drogó antes de meterlo en la tarta.",
+        impactQuestion: "¿Quién tenía acceso a somníferos en la finca esa tarde?"
+      },
+      {
+        minute: 6,
+        title: "La Nota en el Bolsillo del Payaso",
+        badge: "PRUEBA 2 · MIN 6",
+        description: "Una nota arrugada en el bolsillo de Chispa dice: 'La tarta es mía. Si te metes, te meto dentro. Último aviso.'",
+        impactQuestion: "¿Quién consideraba la tarta 'suya' y amenazó al payaso?"
+      }
+    ],
+    interrogationQuestions: [
+      "¿Dónde estaba cada uno entre las 17:50 y las 18:10?",
+      "¿Quién podía acceder a la tarta y a los somníferos?",
+      "¿Por qué alguien metería a un payaso dentro de una tarta?",
+      "¿Quién consideraba la tarta su obra maestra?"
+    ],
+    solution: {
+      culpritNameRole: "Gustavo (El Pastelero Celoso / Papel 3)",
+      crimeTime: "17:55",
+      keyMethod: "Drogó a Chispa con somníferos en la crema de una magdalena, lo metió en la tarta hueca de cinco pisos y dejó que se desmoronara durante el brindis para que pareciera un accidente.",
+      fullStory:
+        "Gustavo llevaba tres días esculpiendo la tarta nupcial, su obra maestra. Cuando Chispa anunció su 'truco final' —salir de la tarta con un globo—, Gustavo entró en pánico: su obra quedaría destrozada. Le ofreció una magdalena 'de prueba' con somníferos, lo metió en la tarta hueca y cerró la trampilla. No pretendía matarlo, solo dormirlo hasta después del brindis. Pero Chispa se despertó, se movió, y la tarta se derrumbó con él dentro.",
+      criticalClues: [
+        "Él horneó la tarta y conocía el hueco interior de cinco pisos.",
+        "La magdalena con somnífero salió de su mesa de trabajo.",
+        "La nota amenazante la escribió él: 'la tarta es mía'."
+      ]
+    },
+    dossiersByPlayerCount: adaptRolesForCount([
+      {
+        roleId: "rol_1",
+        roleName: "La Novia",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La novia contrató a Chispa y recuerda que Gustavo se puso pálido al oír el truco."],
+        dossier: {
+          roleTitle: "La Protagonista Nerviosa",
+          avatar: "👰",
+          isCulprit: false,
+          movements: [
+            { time: "17:30", place: "Jardín", detail: "Disfrutaste del número de globos de Chispa." },
+            { time: "17:50", place: "Salón de Banquetes", detail: "Viste a Gustavo discutir con Chispa junto a la tarta." },
+            { time: "18:10", place: "Salón de Banquetes", detail: "Te desmayaste cuando cayó la pierna." },
+            { time: "18:30", place: "Salón de Banquetes", detail: "Te recuperaste y exigiste explicaciones." }
+          ],
+          knownInfo: [
+            "Viste a Gustavo discutir acaloradamente con Chispa junto a la tarta.",
+            "Gustavo se puso pálido cuando Chispa anunció su truco de salir de la tarta.",
+            "Tú querías una boda normal, no esto."
+          ],
+          secretObjective: "Declara la discusión entre Gustavo y Chispa junto a la tarta.",
+          suspicionNotes: "La discusión sitúa a Gustavo en el lugar del crimen."
+        }
+      },
+      {
+        roleId: "rol_2",
+        roleName: "El Camarero",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El camarero vio a Gustavo salir de la cocina con una magdalena a las 17:45."],
+        dossier: {
+          roleTitle: "El Testigo de la Magdalena",
+          avatar: "🍷",
+          isCulprit: false,
+          movements: [
+            { time: "17:40", place: "Cocina", detail: "Preparando las bandejas del brindis." },
+            { time: "17:45", place: "Cocina", detail: "Viste a Gustavo salir con una magdalena y una sonrisa rara." },
+            { time: "18:05", place: "Salón de Banquetes", detail: "Serviste las copas del brindis." },
+            { time: "18:15", place: "Salón de Banquetes", detail: "Te quedaste helado al ver la pierna." }
+          ],
+          knownInfo: [
+            "Gustavo salió de la cocina con una magdalena a las 17:45.",
+            "Chispa estaba merodeando por la tarta a las 17:50.",
+            "Tú no tocas la tarta: solo la sirves."
+          ],
+          secretObjective: "Declara la magdalena que Gustavo sacó de la cocina.",
+          suspicionNotes: "La magdalena es el vehículo del somnífero."
+        }
+      },
+      {
+        roleId: "rol_3",
+        roleName: "Gustavo el Pastelero",
+        isCulprit: true,
+        extraCluesIfFewerPlayers: ["Gustavo tiene somníferos en el bolsillo y una magdalena mordida en la basura."],
+        dossier: {
+          roleTitle: "El Artista Celoso (¡ERES EL CULPABLE!)",
+          avatar: "🎂",
+          isCulprit: true,
+          movements: [
+            { time: "17:40", place: "Cocina", detail: "Preparaste la magdalena con somnífero 'para el payaso'." },
+            { time: "17:55", place: "Cocina", detail: "Lo dormiste, lo metiste en el hueco de la tarta y cerraste la trampilla." },
+            { time: "18:00", place: "Salón de Banquetes", detail: "Colocaste la tarta en la mesa con una sonrisa." },
+            { time: "18:10", place: "Salón de Banquetes", detail: "La tarta se derrumbó y tú fingiste sorpresa." }
+          ],
+          knownInfo: [
+            "La tarta era tu obra maestra y no ibas a permitir que la destrozaran.",
+            "Tienes somníferos en el bolsillo por 'insomnio'.",
+            "Puedes culpar a la novia diciendo que ella quería una boda 'divertida'."
+          ],
+          secretObjective: "Culpa a la novia y di que la magdalena era para un invitado.",
+          suspicionNotes: "Di que los somníferos son para tu insomnio y que la tarta se cayó sola."
+        }
+      },
+      {
+        roleId: "rol_4",
+        roleName: "La Abuela del Novio",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La abuela dice que vio a Gustavo 'guardar algo en la tarta' y que pidió más tarta."],
+        dossier: {
+          roleTitle: "La Anciana Sin Filtros",
+          avatar: "👵",
+          isCulprit: false,
+          movements: [
+            { time: "17:30", place: "Jardín", detail: "Le dijiste al payaso que 'los payasos dan miedo'." },
+            { time: "17:50", place: "Cocina", detail: "Viste a Gustavo abrir un hueco en la tarta." },
+            { time: "18:10", place: "Salón de Banquetes", detail: "Aplaudiste cuando cayó la pierna." },
+            { time: "18:20", place: "Salón de Banquetes", detail: "Pediste más tarta 'que está buenísima'." }
+          ],
+          knownInfo: [
+            "Viste a Gustavo abrir un hueco en la tarta y meter algo dentro.",
+            "Oíste a Gustavo decir: 'este payaso no me va a arruinar la tarta'.",
+            "Tú solo querías probar la tarta."
+          ],
+          secretObjective: "Declara que viste a Gustavo meter algo en la tarta.",
+          suspicionNotes: "La abuela sitúa a Gustavo manipulando la tarta."
+        }
+      },
+      {
+        roleId: "rol_5",
+        roleName: "El Novio",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El novio recuerda que Gustavo le pidió 'cinco minutos a solas con la tarta'."],
+        dossier: {
+          roleTitle: "El Novio Confundido",
+          avatar: "🤵",
+          isCulprit: false,
+          movements: [
+            { time: "17:30", place: "Jardín", detail: "Reías con los globos de Chispa." },
+            { time: "17:45", place: "Cocina", detail: "Gustavo te pidió cinco minutos a solas con la tarta." },
+            { time: "18:10", place: "Salón de Banquetes", detail: "Viste la pierna y te sentaste." },
+            { time: "18:30", place: "Salón de Banquetes", detail: "Consolaste a la novia." }
+          ],
+          knownInfo: [
+            "Gustavo te pidió cinco minutos a solas con la tarta antes del brindis.",
+            "Chispa te dijo que su truco 'sorprendería a todos'.",
+            "Tú solo querías casarte en paz."
+          ],
+          secretObjective: "Declara que Gustavo pidió cinco minutos a solas con la tarta.",
+          suspicionNotes: "Esos cinco minutos coinciden con el crimen."
+        }
+      },
+      {
+        roleId: "rol_6",
+        roleName: "La Fotógrafa",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La fotógrafa tiene una foto de Gustavo cerrando la trampilla de la tarta a las 17:58."],
+        dossier: {
+          roleTitle: "La Cámara Testigo",
+          avatar: "📷",
+          isCulprit: false,
+          movements: [
+            { time: "17:30", place: "Jardín", detail: "Fotografiando el número de Chispa." },
+            { time: "17:58", place: "Cocina", detail: "Fotografiaste a Gustavo cerrando la trampilla de la tarta." },
+            { time: "18:10", place: "Salón de Banquetes", detail: "Fotografiaste la pierna por instinto." },
+            { time: "18:30", place: "Salón de Banquetes", detail: "Revisaste tus fotos y encontraste la prueba." }
+          ],
+          knownInfo: [
+            "Tienes una foto de Gustavo cerrando la trampilla de la tarta a las 17:58.",
+            "En la foto se ve una pierna de payaso asomando antes de cerrar.",
+            "Tú no tocas la tarta: solo la fotografías."
+          ],
+          secretObjective: "Muestra la foto de Gustavo cerrando la trampilla con la pierna dentro.",
+          suspicionNotes: "La foto es prueba irrefutable."
+        }
+      },
+      {
+        roleId: "rol_7",
+        roleName: "El DJ",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El DJ pinchó 'Entrada de Payaso' a las 17:55 y vio a Gustavo cruzar hacia la cocina."],
+        dossier: {
+          roleTitle: "El Oído de la Fiesta",
+          avatar: "🎧",
+          isCulprit: false,
+          movements: [
+            { time: "17:30", place: "Cabina", detail: "Pinchaste música infantil para el número de Chispa." },
+            { time: "17:55", place: "Cabina", detail: "Viste a Gustavo cruzar hacia la cocina con una magdalena." },
+            { time: "18:10", place: "Cabina", detail: "Cortaste la música al ver la pierna." },
+            { time: "18:30", place: "Cabina", detail: "Declaraste a la policía." }
+          ],
+          knownInfo: [
+            "Gustavo cruzó hacia la cocina con una magdalena a las 17:55.",
+            "Chispa no volvió a salir de la cocina.",
+            "Tú no te moviste de la cabina."
+          ],
+          secretObjective: "Declara que Gustavo cruzó hacia la cocina con una magdalena.",
+          suspicionNotes: "El trayecto y la magdalena cierran el círculo."
+        }
+      }
+    ])
+  },
+
+{
+    id: 12,
+    slug: "asesinato-en-la-biblioteca",
+    title: "Asesinato en la Biblioteca Silenciosa",
+    subtitle: "El bibliotecario aparece estrangulado con un marcapáginas",
+    category: "Misterio Clásico",
+    emoji: "📚",
+    location: "Biblioteca Municipal de Villapáginas",
+    incidentTime: "A las 19:30, tras el cierre",
+    synopsis:
+      "El bibliotecario Herminio aparece estrangulado con un marcapáginas de seda en la sala de incunables. La puerta estaba cerrada por dentro y la ventana también. Los cinco socios del club de lectura siguen en el edificio porque la lluvia los retuvo.",
+    publicTimeline: [
+      { time: "18:50", description: "Herminio anuncia el cierre y pide a los socios que se marchen.", location: "Mostrador" },
+      { time: "19:00", description: "La lluvia obliga a los socios a quedarse en la sala de lectura.", location: "Sala de Lectura" },
+      { time: "19:30", description: "Se oye un golpe en la sala de incunables.", location: "Sala de Incunables" },
+      { time: "19:40", description: "La puerta se abre y aparece Herminio con el marcapáginas al cuello.", location: "Sala de Incunables" },
+      { time: "19:50", description: "Llega la policía y retiene a los socios.", location: "Biblioteca" }
+    ],
+    progressiveClues: [
+      {
+        minute: 3,
+        title: "El Marcapáginas de Seda",
+        badge: "PRUEBA 1 · MIN 3",
+        description: "El marcapáginas que estranguló a Herminio es de seda azul con iniciales bordadas: 'M.L.' No es de la biblioteca.",
+        impactQuestion: "¿Quién tiene iniciales M.L. y usa marcapáginas de seda bordados?"
+      },
+      {
+        minute: 6,
+        title: "El Libro Abierto en la Mesa",
+        badge: "PRUEBA 2 · MIN 6",
+        description: "Sobre la mesa hay un incunable abierto por la página 77. En el margen alguien escribió: 'Tú lo escondiste. Yo lo sé. Pág. 77.'",
+        impactQuestion: "¿Quién descubrió el secreto de la página 77 y amenazó a Herminio?"
+      }
+    ],
+    interrogationQuestions: [
+      "¿Dónde estaba cada uno entre las 19:00 y las 19:40?",
+      "¿Quién tiene iniciales M.L.?",
+      "¿Qué secreto guardaba la página 77 del incunable?",
+      "¿Quién entró en la sala de incunables antes del golpe?"
+    ],
+    solution: {
+      culpritNameRole: "Marta Lorente (La Socia Historiadora / Papel 3)",
+      crimeTime: "19:30",
+      keyMethod: "Entró en la sala de incunables con la excusa de devolver un libro, estranguló a Herminio con su marcapáginas de seda y cerró la puerta por dentro usando el pasador automático.",
+      fullStory:
+        "Marta llevaba años investigando un incunable que demostraba que su familia había sido desposeída de unas tierras por un antepasado de Herminio. En la página 77 estaba la prueba. Herminio la había escondido para que nadie la viera. Esa noche Marta entró a devolver un libro, le exigió el incunable, y al negarse, lo estranguló con su propio marcapáginas. Cerró la puerta por dentro con el pasador automático y volvió a la sala de lectura empapada por la lluvia.",
+      criticalClues: [
+        "Sus iniciales son M.L. y su marcapáginas de seda bordado faltaba esa noche.",
+        "Fue la última en entrar en la sala de incunables antes del golpe.",
+        "Sus zapatos estaban mojados cuando volvió a la sala de lectura (cruzó el patio)."
+      ]
+    },
+    dossiersByPlayerCount: adaptRolesForCount([
+      {
+        roleId: "rol_1",
+        roleName: "El Presidente del Club",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El presidente recuerda que Marta insistió en devolver un libro a las 19:25."],
+        dossier: {
+          roleTitle: "El Lector Metódico",
+          avatar: "🎩",
+          isCulprit: false,
+          movements: [
+            { time: "19:00", place: "Sala de Lectura", detail: "Comentando el libro del mes con los socios." },
+            { time: "19:25", place: "Sala de Lectura", detail: "Viste a Marta insistir en devolver un libro." },
+            { time: "19:30", place: "Sala de Lectura", detail: "Oíste el golpe en incunables." },
+            { time: "19:40", place: "Sala de Incunables", detail: "Abriste la puerta y viste el cuerpo." }
+          ],
+          knownInfo: [
+            "Marta insistió en devolver un libro a las 19:25, cuando ya había cerrado.",
+            "Herminio te había comentado que alguien 'quería un libro que no debía'.",
+            "Tú no te moviste de la sala de lectura."
+          ],
+          secretObjective: "Declara la insistencia de Marta en devolver el libro tras el cierre.",
+          suspicionNotes: "Su insistencia la sitúa en la escena."
+        }
+      },
+      {
+        roleId: "rol_2",
+        roleName: "La Bibliotecaria Auxiliar",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La auxiliar confirma que el marcapáginas de seda azul es de Marta."],
+        dossier: {
+          roleTitle: "La Guardiana de los Libros",
+          avatar: "📖",
+          isCulprit: false,
+          movements: [
+            { time: "19:00", place: "Mostrador", detail: "Recogiendo los libros devueltos." },
+            { time: "19:20", place: "Mostrador", detail: "Viste el marcapáginas de seda azul de Marta en su libro." },
+            { time: "19:35", place: "Mostrador", detail: "Oíste el golpe y corriste." },
+            { time: "19:45", place: "Sala de Incunables", detail: "Reconociste el marcapáginas al cuello de Herminio." }
+          ],
+          knownInfo: [
+            "El marcapáginas de seda azul con iniciales M.L. es de Marta.",
+            "Marta lo usaba siempre en sus libros del club.",
+            "Tú no entraste en la sala de incunables."
+          ],
+          secretObjective: "Identifica el marcapáginas como propiedad de Marta.",
+          suspicionNotes: "El marcapáginas es la prueba material."
+        }
+      },
+      {
+        roleId: "rol_3",
+        roleName: "Marta Lorente",
+        isCulprit: true,
+        extraCluesIfFewerPlayers: ["Marta tiene los zapatos mojados y le falta el marcapáginas de seda."],
+        dossier: {
+          roleTitle: "La Historiadora Resentida (¡ERES LA CULPABLE!)",
+          avatar: "🔍",
+          isCulprit: true,
+          movements: [
+            { time: "19:20", place: "Sala de Lectura", detail: "Planeaste devolver el libro para entrar en incunables." },
+            { time: "19:30", place: "Sala de Incunables", detail: "Le exigiste el incunable a Herminio, lo estrangulaste con tu marcapáginas y cerraste por dentro." },
+            { time: "19:35", place: "Patio", detail: "Cruzaste el patio mojado y volviste a la sala de lectura." },
+            { time: "19:40", place: "Sala de Lectura", detail: "Fingiste sorpresa con el resto." }
+          ],
+          knownInfo: [
+            "El incunable de la página 77 demuestra que tu familia fue desposeída por un antepasado de Herminio.",
+            "Herminio lo escondió para que nadie lo viera.",
+            "Puedes culpar al presidente diciendo que él también quería el libro."
+          ],
+          secretObjective: "Culpa al presidente y di que perdiste el marcapáginas hace días.",
+          suspicionNotes: "Di que tus zapatos están mojados porque fuiste al baño."
+        }
+      },
+      {
+        roleId: "rol_4",
+        roleName: "El Socio Novato",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El novato vio a Marta salir del patio con los zapatos empapados a las 19:35."],
+        dossier: {
+          roleTitle: "El Observador Invisible",
+          avatar: "🧐",
+          isCulprit: false,
+          movements: [
+            { time: "19:00", place: "Sala de Lectura", detail: "Escuchando la tertulia sin hablar." },
+            { time: "19:35", place: "Ventana", detail: "Viste a Marta cruzar el patio empapada." },
+            { time: "19:40", place: "Sala de Lectura", detail: "Señalaste la ventana." },
+            { time: "19:50", place: "Biblioteca", detail: "Declaraste a la policía." }
+          ],
+          knownInfo: [
+            "Viste a Marta cruzar el patio empapada a las 19:35.",
+            "Marta dijo que venía del baño, pero el baño no está en el patio.",
+            "Tú no te moviste de la ventana."
+          ],
+          secretObjective: "Declara que viste a Marta cruzar el patio empapada.",
+          suspicionNotes: "El patio conecta la sala de lectura con incunables."
+        }
+      },
+      {
+        roleId: "rol_5",
+        roleName: "La Poeta del Club",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La poeta recuerda que Herminio le dijo: 'alguien quiere la página 77'."],
+        dossier: {
+          roleTitle: "La Alma Sensible",
+          avatar: "🌹",
+          isCulprit: false,
+          movements: [
+            { time: "19:00", place: "Sala de Lectura", detail: "Recitando un poema sobre la lluvia." },
+            { time: "19:15", place: "Mostrador", detail: "Herminio te dijo: 'alguien quiere la página 77'." },
+            { time: "19:30", place: "Sala de Lectura", detail: "Oíste el golpe y te santiguaste." },
+            { time: "19:40", place: "Sala de Incunables", detail: "Lloraste al ver el cuerpo." }
+          ],
+          knownInfo: [
+            "Herminio te confesó que 'alguien quiere la página 77'.",
+            "Ese alguien era Marta, que llevaba semanas preguntando por el incunable.",
+            "Tú solo escribes poesía, no matas a nadie."
+          ],
+          secretObjective: "Declara la confesión de Herminio sobre la página 77 y las preguntas de Marta.",
+          suspicionNotes: "El secreto de la página 77 es el móvil."
+        }
+      },
+      {
+        roleId: "rol_6",
+        roleName: "El Conserje",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El conserje cerró la ventana de incunables a las 19:20 y estaba intacta."],
+        dossier: {
+          roleTitle: "El Hombre de las Llaves",
+          avatar: "🔑",
+          isCulprit: false,
+          movements: [
+            { time: "19:00", place: "Pasillo", detail: "Repartiendo paraguas a los socios." },
+            { time: "19:20", place: "Sala de Incunables", detail: "Cerraste la ventana y comprobaste el pasador." },
+            { time: "19:30", place: "Pasillo", detail: "Oíste el golpe y corriste." },
+            { time: "19:45", place: "Sala de Incunables", detail: "Comprobaste que la ventana seguía cerrada." }
+          ],
+          knownInfo: [
+            "La ventana de incunables estaba cerrada y el pasador automático puesto.",
+            "El pasador se cierra solo desde dentro al empujar la puerta.",
+            "Tú tienes llave de todo, pero no entraste tras el cierre."
+          ],
+          secretObjective: "Explica el funcionamiento del pasador automático que cerró la puerta por dentro.",
+          suspicionNotes: "El pasador automático permite cerrar desde fuera empujando."
+        }
+      },
+      {
+        roleId: "rol_7",
+        roleName: "El Estudiante de Guardia",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El estudiante vio a Marta salir de incunables ajustándose la blusa a las 19:32."],
+        dossier: {
+          roleTitle: "El Joven Distraído",
+          avatar: "🎒",
+          isCulprit: false,
+          movements: [
+            { time: "19:00", place: "Sala de Lectura", detail: "Estudiando para un examen." },
+            { time: "19:32", place: "Pasillo", detail: "Viste a Marta salir de incunables ajustándose la blusa." },
+            { time: "19:40", place: "Sala de Lectura", detail: "Levantaste la vista al oír el grito." },
+            { time: "19:50", place: "Biblioteca", detail: "Contaste lo que viste." }
+          ],
+          knownInfo: [
+            "Viste a Marta salir de incunables a las 19:32, antes del grito.",
+            "Marta llevaba la blusa desabrochada y el pelo revuelto.",
+            "Tú no te moviste del pasillo."
+          ],
+          secretObjective: "Declara que viste a Marta salir de incunables a las 19:32.",
+          suspicionNotes: "La salida de Marta antes del grito la delata."
+        }
+      }
+    ])
+  },
+
+{
+    id: 13,
+    slug: "el-caso-del-gimnasio-pegajoso",
+    title: "El Caso del Gimnasio Pegajoso",
+    subtitle: "El monitor de spinning aparece pegado a una bicicleta",
+    category: "Humor Absurdo",
+    emoji: "🚴",
+    location: "Gimnasio Anima2, sala de spinning",
+    incidentTime: "A las 08:00, en la clase de spinning",
+    synopsis:
+      "El monitor de spinning, Ramiro, aparece pegado con cola industrial al sillín de su bicicleta. No puede despegarse. La clase se cancela y el dueño del gimnasio exige saber quién vació tres botes de cola en el sillín. Ramiro jura que 'alguien quiere mi trono'.",
+    publicTimeline: [
+      { time: "07:30", description: "Ramiro prepara las bicicletas para la clase de las 08:00.", location: "Sala de Spinning" },
+      { time: "07:45", description: "Los alumnos empiezan a entrar y calentar.", location: "Sala de Spinning" },
+      { time: "08:00", description: "Ramiro se sienta en su bicicleta y no se levanta.", location: "Sala de Spinning" },
+      { time: "08:05", description: "La clase se cancela y llaman al dueño.", location: "Sala de Spinning" },
+      { time: "08:15", description: "El dueño retiene a todos los presentes.", location: "Gimnasio" }
+    ],
+    progressiveClues: [
+      {
+        minute: 3,
+        title: "El Bote de Cola Industrial",
+        badge: "PRUEBA 1 · MIN 3",
+        description: "En la papelera hay tres botes vacíos de cola industrial 'PegaFuerte 3000'. La etiqueta lleva el precio de una ferretería del barrio y una huella de dedo con pintalabios rojo.",
+        impactQuestion: "¿Quién compró cola en la ferretería y lleva pintalabios rojo?"
+      },
+      {
+        minute: 6,
+        title: "El Mensaje en el Espejo",
+        badge: "PRUEBA 2 · MIN 6",
+        description: "En el espejo de la sala, escrito con rotulador de pizarra: 'Ramiro, tu trono es mío. La próxima vez será el manillar.'",
+        impactQuestion: "¿Quién quería el puesto de monitor de spinning y amenazó a Ramiro?"
+      }
+    ],
+    interrogationQuestions: [
+      "¿Dónde estaba cada uno entre las 07:30 y las 08:00?",
+      "¿Quién compró cola industrial en la ferretería del barrio?",
+      "¿Quién quería el puesto de Ramiro?",
+      "¿Quién lleva pintalabios rojo y usa rotulador de pizarra?"
+    ],
+    solution: {
+      culpritNameRole: "Vanesa (La Alumna Aspirante a Monitora / Papel 3)",
+      crimeTime: "07:35",
+      keyMethod: "Compró tres botes de cola industrial, los vertió en el sillín de Ramiro mientras él colocaba las pesas y escribió la amenaza en el espejo con rotulador de pizarra.",
+      fullStory:
+        "Vanesa llevaba un año pidiendo a Ramiro que la dejara dar la clase de spinning. Ramiro se reía de ella y le decía que 'le faltaba nivel'. Harta, compró cola industrial en la ferretería del barrio, entró en la sala a las 07:35 mientras Ramiro colocaba las pesas y vertió la cola en el sillín. Escribió la amenaza en el espejo con el rotulador de pizarra que usa para las clases. No pretendía matarlo, solo 'darle una lección pegajosa'.",
+      criticalClues: [
+        "El precio de la ferretería coincide con el ticket que lleva en el bolso.",
+        "La huella de pintalabios rojo es suya: lo usa a diario.",
+        "Fue la primera en llegar y la única que estuvo sola en la sala a las 07:35."
+      ]
+    },
+    dossiersByPlayerCount: adaptRolesForCount([
+      {
+        roleId: "rol_1",
+        roleName: "El Dueño del Gimnasio",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El dueño recuerda que Vanesa le pidió el puesto de Ramiro la semana pasada."],
+        dossier: {
+          roleTitle: "El Empresario Sudoroso",
+          avatar: "💼",
+          isCulprit: false,
+          movements: [
+            { time: "07:20", place: "Oficina", detail: "Revisando las cuentas del gimnasio." },
+            { time: "07:50", place: "Recepción", detail: "Viste a Vanesa llegar antes que nadie." },
+            { time: "08:00", place: "Sala de Spinning", detail: "Oíste los gritos de Ramiro." },
+            { time: "08:15", place: "Gimnasio", detail: "Retuviste a todos." }
+          ],
+          knownInfo: [
+            "Vanesa te pidió el puesto de Ramiro la semana pasada.",
+            "Vanesa llegó antes que nadie a las 07:30.",
+            "Tú no tocas la cola industrial: bastante tienes con el gimnasio."
+          ],
+          secretObjective: "Declara que Vanesa pidió el puesto de Ramiro.",
+          suspicionNotes: "El móvil del puesto apunta a Vanesa."
+        }
+      },
+      {
+        roleId: "rol_2",
+        roleName: "La Recepcionista",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La recepcionista vio a Vanesa entrar con una bolsa de ferretería a las 07:30."],
+        dossier: {
+          roleTitle: "La Testigo de la Bolsa",
+          avatar: "💅",
+          isCulprit: false,
+          movements: [
+            { time: "07:25", place: "Recepción", detail: "Abriendo el gimnasio." },
+            { time: "07:30", place: "Recepción", detail: "Viste a Vanesa entrar con una bolsa de ferretería." },
+            { time: "07:50", place: "Recepción", detail: "Viste a Ramiro subir a la sala." },
+            { time: "08:05", place: "Sala de Spinning", detail: "Llamaste al dueño." }
+          ],
+          knownInfo: [
+            "Vanesa entró con una bolsa de ferretería a las 07:30.",
+            "La bolsa hacía ruido a botes de metal.",
+            "Tú no subes a la sala de spinning."
+          ],
+          secretObjective: "Declara la bolsa de ferretería que trajo Vanesa.",
+          suspicionNotes: "La bolsa contiene los botes de cola."
+        }
+      },
+      {
+        roleId: "rol_3",
+        roleName: "Vanesa",
+        isCulprit: true,
+        extraCluesIfFewerPlayers: ["Vanesa tiene el ticket de la ferretería y pintalabios rojo."],
+        dossier: {
+          roleTitle: "La Aspirante Pegajosa (¡ERES LA CULPABLE!)",
+          avatar: "💪",
+          isCulprit: true,
+          movements: [
+            { time: "07:30", place: "Recepción", detail: "Entraste con la bolsa de ferretería." },
+            { time: "07:35", place: "Sala de Spinning", detail: "Vertiste la cola en el sillín y escribiste en el espejo." },
+            { time: "07:45", place: "Vestuario", detail: "Te cambiaste como si nada." },
+            { time: "08:00", place: "Sala de Spinning", detail: "Fingiste sorpresa con el resto." }
+          ],
+          knownInfo: [
+            "Llevas un año pidiendo el puesto de Ramiro y él se ríe de ti.",
+            "Compraste tres botes de cola industrial en la ferretería del barrio.",
+            "Puedes culpar a la recepcionista diciendo que ella también quería el puesto."
+          ],
+          secretObjective: "Culpa a la recepcionista y di que la bolsa era de comida.",
+          suspicionNotes: "Di que el ticket es de hace meses y que el pintalabios es de otra marca."
+        }
+      },
+      {
+        roleId: "rol_4",
+        roleName: "El Alumno Empollón",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El alumno vio a Vanesa salir de la sala de spinning a las 07:40 con las manos brillantes."],
+        dossier: {
+          roleTitle: "El Sabelotodo",
+          avatar: "🤓",
+          isCulprit: false,
+          movements: [
+            { time: "07:40", place: "Pasillo", detail: "Viste a Vanesa salir con las manos brillantes." },
+            { time: "07:45", place: "Sala de Spinning", detail: "Calentando en tu bicicleta." },
+            { time: "08:00", place: "Sala de Spinning", detail: "Grabaste el momento en que Ramiro se quedó pegado." },
+            { time: "08:15", place: "Gimnasio", detail: "Mostraste el vídeo al dueño." }
+          ],
+          knownInfo: [
+            "Viste a Vanesa salir con las manos brillantes a las 07:40.",
+            "Las manos brillantes eran de cola.",
+            "Tú solo querías dar la clase."
+          ],
+          secretObjective: "Muestra el vídeo de Ramiro quedándose pegado y las manos brillantes de Vanesa.",
+          suspicionNotes: "Las manos brillantes son prueba directa."
+        }
+      },
+      {
+        roleId: "rol_5",
+        roleName: "La Compañera de Clase",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La compañera oyó a Vanesa decir: 'Ramiro se va a enterar de lo que es estar pegado'."],
+        dossier: {
+          roleTitle: "La Oreja del Vestuario",
+          avatar: "🎧",
+          isCulprit: false,
+          movements: [
+            { time: "07:35", place: "Vestuario", detail: "Oíste a Vanesa decir la frase." },
+            { time: "07:45", place: "Sala de Spinning", detail: "Calentando en tu bicicleta." },
+            { time: "08:00", place: "Sala de Spinning", detail: "Te reíste sin querer." },
+            { time: "08:15", place: "Gimnasio", detail: "Contaste la frase al dueño." }
+          ],
+          knownInfo: [
+            "Oíste a Vanesa decir: 'Ramiro se va a enterar de lo que es estar pegado'.",
+            "Lo dijo a las 07:35 en el vestuario.",
+            "Tú no tienes nada contra Ramiro, aunque da clases aburridas."
+          ],
+          secretObjective: "Declara la frase premonitoria de Vanesa en el vestuario.",
+          suspicionNotes: "La frase demuestra premeditación."
+        }
+      },
+      {
+        roleId: "rol_6",
+        roleName: "El Becario",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El becario encontró el rotulador de pizarra de Vanesa en la sala a las 07:40."],
+        dossier: {
+          roleTitle: "El Chico de los Recados",
+          avatar: "🧹",
+          isCulprit: false,
+          movements: [
+            { time: "07:30", place: "Almacén", detail: "Reponiendo toallas." },
+            { time: "07:40", place: "Sala de Spinning", detail: "Encontraste el rotulador de pizarra de Vanesa." },
+            { time: "08:00", place: "Pasillo", detail: "Oíste los gritos." },
+            { time: "08:15", place: "Gimnasio", detail: "Entregaste el rotulador al dueño." }
+          ],
+          knownInfo: [
+            "El rotulador de pizarra lleva la etiqueta 'Vanesa' pegada.",
+            "Lo encontraste en la sala a las 07:40.",
+            "Tú no escribes en espejos."
+          ],
+          secretObjective: "Entrega el rotulador de Vanesa encontrado en la sala.",
+          suspicionNotes: "El rotulador la sitúa escribiendo en el espejo."
+        }
+      },
+      {
+        roleId: "rol_7",
+        roleName: "La Limpiadora",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La limpiadora vio a Vanesa entrar en la sala con los tres botes a las 07:33."],
+        dossier: {
+          roleTitle: "La Testigo Silenciosa",
+          avatar: "🧽",
+          isCulprit: false,
+          movements: [
+            { time: "07:25", place: "Pasillo", detail: "Fregando el suelo." },
+            { time: "07:33", place: "Pasillo", detail: "Viste a Vanesa entrar con los tres botes." },
+            { time: "07:50", place: "Pasillo", detail: "Viste a Ramiro subir." },
+            { time: "08:15", place: "Gimnasio", detail: "Declaraste a la policía." }
+          ],
+          knownInfo: [
+            "Vanesa entró en la sala con tres botes a las 07:33.",
+            "Los botes tenían la etiqueta 'PegaFuerte 3000'.",
+            "Tú no entras en la sala hasta que se vacía."
+          ],
+          secretObjective: "Declara que viste a Vanesa entrar con los tres botes.",
+          suspicionNotes: "Los tres botes cierran el caso."
+        }
+      }
+    ])
+  },
+
+{
+    id: 14,
+    slug: "asesinato-en-el-teatro",
+    title: "Asesinato en el Teatro de la Ópera",
+    subtitle: "El tenor aparece muerto en el foso de la orquesta",
+    category: "Misterio Clásico",
+    emoji: "🎭",
+    location: "Teatro Real de Villaclave, foso de la orquesta",
+    incidentTime: "A las 22:15, durante el segundo acto",
+    synopsis:
+      "El tenor italiano Enzo Bellini aparece muerto en el foso de la orquesta al final del segundo acto de 'Tosca'. Le han cortado la cuerda del telón y ha caído desde el escenario. La función se cancela y el elenco queda retenido entre bambalinas.",
+    publicTimeline: [
+      { time: "21:50", description: "Enzo termina su aria del segundo acto y sale a bambalinas.", location: "Bambalinas" },
+      { time: "22:00", description: "Se oye un crujido en el telón y Enzo desaparece del escenario.", location: "Escenario" },
+      { time: "22:10", description: "La orquesta deja de tocar al ver el cuerpo en el foso.", location: "Foso de la Orquesta" },
+      { time: "22:15", description: "Se baja el telón de seguridad y se cancela la función.", location: "Escenario" },
+      { time: "22:30", description: "Se retiene a todo el elenco y al personal técnico.", location: "Bambalinas" }
+    ],
+    progressiveClues: [
+      {
+        minute: 3,
+        title: "La Cuerda Cortada con Lima de Uñas",
+        badge: "PRUEBA 1 · MIN 3",
+        description: "La cuerda del telón está cortada limpiamente con una lima de uñas de acero. Entre las fibras hay restos de esmalte de uñas rojo.",
+        impactQuestion: "¿Quién usa lima de acero y esmalte de uñas rojo?"
+      },
+      {
+        minute: 6,
+        title: "La Carta de Despido en el Camerino",
+        badge: "PRUEBA 2 · MIN 6",
+        description: "En el camerino de Enzo hay una carta firmada por la directora: 'Bellini, su contrato no se renueva. Cante en otra parte.' Con una nota añadida a mano: 'Y no vuelva a pisar este escenario.'",
+        impactQuestion: "¿Quién firmó el despido y añadió la nota amenazante?"
+      }
+    ],
+    interrogationQuestions: [
+      "¿Dónde estaba cada uno entre las 21:50 y las 22:10?",
+      "¿Quién tiene acceso a la cuerda del telón?",
+      "¿Quién firmó el despido de Enzo?",
+      "¿Quién usa lima de acero y esmalte rojo?"
+    ],
+    solution: {
+      culpritNameRole: "Renata (La Soprano Desplazada / Papel 3)",
+      crimeTime: "21:55",
+      keyMethod: "Subió a la pasarela del telón con la excusa de revisar el vestuario, cortó la cuerda con su lima de uñas mientras Enzo estaba en el borde y añadió la nota al despido para incriminar a la directora.",
+      fullStory:
+        "Renata había sido la soprano principal hasta que Enzo llegó y la desplazó a papeles secundarios. La directora había decidido no renovarle el contrato a Enzo, pero Renata no lo sabía y creyó que la despedirían a ella. Subió a la pasarela, cortó la cuerda del telón con su lima de acero y añadió la nota al despido para desviar sospechas hacia la directora. Enzo se apoyó en la cuerda al salir del aria y cayó al foso.",
+      criticalClues: [
+        "Usa lima de acero y esmalte rojo a diario.",
+        "Fue vista en la pasarela del telón a las 21:55.",
+        "Su letra coincide con la nota añadida al despido."
+      ]
+    },
+    dossiersByPlayerCount: adaptRolesForCount([
+      {
+        roleId: "rol_1",
+        roleName: "La Directora de Escena",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La directora jura que la nota añadida al despido no es suya."],
+        dossier: {
+          roleTitle: "La Autoridad del Teatro",
+          avatar: "🎬",
+          isCulprit: false,
+          movements: [
+            { time: "21:40", place: "Oficina", detail: "Firmaste el despido de Enzo." },
+            { time: "21:50", place: "Bambalinas", detail: "Coordinando el cambio de acto." },
+            { time: "22:00", place: "Bambalinas", detail: "Oíste el crujido y viste caer a Enzo." },
+            { time: "22:15", place: "Escenario", detail: "Bajaste el telón de seguridad." }
+          ],
+          knownInfo: [
+            "Firmaste el despido de Enzo, pero no añadiste la nota amenazante.",
+            "La letra de la nota no es tuya.",
+            "Tú no subes a la pasarela desde hace años."
+          ],
+          secretObjective: "Declara que la nota añadida no es tuya y que alguien la imita.",
+          suspicionNotes: "La nota falsa apunta a alguien que quiere incriminarla."
+        }
+      },
+      {
+        roleId: "rol_2",
+        roleName: "El Tramoyista",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El tramoyista vio a Renata subir a la pasarela a las 21:55."],
+        dossier: {
+          roleTitle: "El Hombre de las Cuerdas",
+          avatar: "🪢",
+          isCulprit: false,
+          movements: [
+            { time: "21:40", place: "Pasarela", detail: "Revisando las cuerdas del telón." },
+            { time: "21:55", place: "Pasarela", detail: "Viste a Renata subir con una lima." },
+            { time: "22:00", place: "Bambalinas", detail: "Oíste el crujido y corriste." },
+            { time: "22:15", place: "Escenario", detail: "Bajaste el telón con la directora." }
+          ],
+          knownInfo: [
+            "Renata subió a la pasarela a las 21:55 con una lima.",
+            "La cuerda fue cortada con lima de acero, no con cuchillo.",
+            "Tú no tocas las cuerdas sin guantes."
+          ],
+          secretObjective: "Declara que viste a Renata subir a la pasarela con una lima.",
+          suspicionNotes: "La lima es el arma del corte."
+        }
+      },
+      {
+        roleId: "rol_3",
+        roleName: "Renata",
+        isCulprit: true,
+        extraCluesIfFewerPlayers: ["Renata tiene esmalte rojo y una lima de acero en el bolso."],
+        dossier: {
+          roleTitle: "La Soprano Desplazada (¡ERES LA CULPABLE!)",
+          avatar: "🎼",
+          isCulprit: true,
+          movements: [
+            { time: "21:50", place: "Camerino", detail: "Añadiste la nota al despido imitando la letra de la directora." },
+            { time: "21:55", place: "Pasarela", detail: "Cortaste la cuerda del telón con tu lima de acero." },
+            { time: "22:00", place: "Bambalinas", detail: "Fingiste sorpresa al ver caer a Enzo." },
+            { time: "22:15", place: "Bambalinas", detail: "Lloraste 'desconsolada'." }
+          ],
+          knownInfo: [
+            "Enzo te desplazó a papeles secundarios y lo odias.",
+            "Cortaste la cuerda con tu lima de acero.",
+            "Puedes culpar a la directora diciendo que ella firmó el despido."
+          ],
+          secretObjective: "Culpa a la directora y di que tu lima es para las uñas.",
+          suspicionNotes: "Di que el esmalte rojo es de otra y que no subiste a la pasarela."
+        }
+      },
+      {
+        roleId: "rol_4",
+        roleName: "El Barítono",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El barítono oyó a Renata decir: 'Enzo no llegará al tercer acto'."],
+        dossier: {
+          roleTitle: "La Voz Celosa",
+          avatar: "🎵",
+          isCulprit: false,
+          movements: [
+            { time: "21:45", place: "Camerino", detail: "Oíste la frase de Renata." },
+            { time: "21:50", place: "Bambalinas", detail: "Esperando tu entrada." },
+            { time: "22:00", place: "Bambalinas", detail: "Viste caer a Enzo." },
+            { time: "22:15", place: "Bambalinas", detail: "Contaste la frase a la directora." }
+          ],
+          knownInfo: [
+            "Oíste a Renata decir: 'Enzo no llegará al tercer acto'.",
+            "Lo dijo a las 21:45 en el camerino.",
+            "Tú no tienes nada contra Enzo, aunque desafina."
+          ],
+          secretObjective: "Declara la frase premonitoria de Renata.",
+          suspicionNotes: "La frase demuestra premeditación."
+        }
+      },
+      {
+        roleId: "rol_5",
+        roleName: "La Maquilladora",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La maquilladora confirma que Renata usa lima de acero y esmalte rojo."],
+        dossier: {
+          roleTitle: "La Artista del Rostro",
+          avatar: "💄",
+          isCulprit: false,
+          movements: [
+            { time: "21:30", place: "Camerino", detail: "Maquillando a Enzo." },
+            { time: "21:50", place: "Camerino", detail: "Viste a Renata guardar la lima en el bolso." },
+            { time: "22:00", place: "Bambalinas", detail: "Oíste el crujido." },
+            { time: "22:15", place: "Bambalinas", detail: "Declaraste a la policía." }
+          ],
+          knownInfo: [
+            "Renata usa lima de acero y esmalte rojo a diario.",
+            "La viste guardar la lima en el bolso a las 21:50.",
+            "Tú no tocas las cuerdas del telón."
+          ],
+          secretObjective: "Identifica la lima y el esmalte de Renata.",
+          suspicionNotes: "La lima y el esmalte son prueba material."
+        }
+      },
+      {
+        roleId: "rol_6",
+        roleName: "El Apuntador",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El apuntador vio a Renata bajar de la pasarela a las 21:58."],
+        dossier: {
+          roleTitle: "La Sombra del Foso",
+          avatar: "📜",
+          isCulprit: false,
+          movements: [
+            { time: "21:50", place: "Foso", detail: "Apuntando el aria de Enzo." },
+            { time: "21:58", place: "Pasillo", detail: "Viste a Renata bajar de la pasarela." },
+            { time: "22:00", place: "Foso", detail: "Viste caer el cuerpo." },
+            { time: "22:15", place: "Foso", detail: "Saliste corriendo." }
+          ],
+          knownInfo: [
+            "Viste a Renata bajar de la pasarela a las 21:58.",
+            "Renata llevaba la lima en la mano.",
+            "Tú no subes a la pasarela."
+          ],
+          secretObjective: "Declara que viste a Renata bajar de la pasarela con la lima.",
+          suspicionNotes: "La bajada con la lima la delata."
+        }
+      },
+      {
+        roleId: "rol_7",
+        roleName: "La Coreógrafa",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La coreógrafa nota que la nota del despido imita la letra de la directora pero no es igual."],
+        dossier: {
+          roleTitle: "La Observadora del Detalle",
+          avatar: "🩰",
+          isCulprit: false,
+          movements: [
+            { time: "21:40", place: "Oficina", detail: "Viste el despido original en la mesa." },
+            { time: "21:50", place: "Bambalinas", detail: "Coordinando a los bailarines." },
+            { time: "22:00", place: "Bambalinas", detail: "Oíste el crujido." },
+            { time: "22:20", place: "Oficina", detail: "Comparaste la nota con la letra de la directora." }
+          ],
+          knownInfo: [
+            "La nota del despido imita la letra de la directora pero no es idéntica.",
+            "La letra de Renata tiene rasgos muy parecidos.",
+            "Tú no firmas despidos."
+          ],
+          secretObjective: "Declara que la nota imita la letra de la directora y se parece a la de Renata.",
+          suspicionNotes: "La falsificación de la nota apunta a Renata."
+        }
+      }
+    ])
+  },
+
+{
+    id: 15,
+    slug: "el-misterio-del-concurso-de-tortillas",
+    title: "El Misterio del Concurso de Tortillas",
+    subtitle: "El jurado cae dormido tras probar la tortilla de la abuela",
+    category: "Humor & Gastronomía",
+    emoji: "🍳",
+    location: "Plaza Mayor de Villahuevo, carpa del concurso",
+    incidentTime: "A las 13:30, tras la cata final",
+    synopsis:
+      "Los cinco miembros del jurado del Concurso Nacional de Tortillas caen dormidos a la vez tras probar la tortilla de la abuela Eulalia. La abuela jura que su tortilla solo lleva huevo, patata y cebolla. Alguien ha añadido algo más al plato. El premio está en juego.",
+    publicTimeline: [
+      { time: "12:30", description: "Los finalistas presentan sus tortillas al jurado.", location: "Carpa del Concurso" },
+      { time: "13:00", description: "La abuela Eulalia presenta su tortilla con gran expectación.", location: "Carpa del Concurso" },
+      { time: "13:30", description: "Los cinco jurados se duermen sobre la mesa.", location: "Mesa del Jurado" },
+      { time: "13:35", description: "Se suspende el concurso y se llama a urgencias.", location: "Carpa del Concurso" },
+      { time: "13:45", description: "Se retiene a los finalistas y al personal de la carpa.", location: "Plaza Mayor" }
+    ],
+    progressiveClues: [
+      {
+        minute: 3,
+        title: "El Frasco de Valeriana en la Basura",
+        badge: "PRUEBA 1 · MIN 3",
+        description: "En la basura de la carpa hay un frasco vacío de valeriana concentrada 'SueñoProfundo'. La etiqueta tiene el precio de una herboristería y una huella de harina.",
+        impactQuestion: "¿Quién compró valeriana en la herboristería y tiene harina en las manos?"
+      },
+      {
+        minute: 6,
+        title: "La Nota Bajo el Mantel",
+        badge: "PRUEBA 2 · MIN 6",
+        description: "Bajo el mantel de la mesa del jurado hay una nota: 'Si gana la abuela, el concurso se duerme. Retírate ahora y no habrá problemas.'",
+        impactQuestion: "¿Quién quería retirarse del concurso y amenazó con dormir al jurado?"
+      }
+    ],
+    interrogationQuestions: [
+      "¿Dónde estaba cada uno entre las 12:30 y las 13:30?",
+      "¿Quién compró valeriana en la herboristería?",
+      "¿Quién tenía harina en las manos?",
+      "¿Quién amenazó con dormir al jurado?"
+    ],
+    solution: {
+      culpritNameRole: "Fermín (El Finalista Derrotado / Papel 3)",
+      crimeTime: "13:00",
+      keyMethod: "Compró valeriana concentrada en la herboristería, la disolvió en la tortilla de la abuela mientras ella iba a por sal y dejó la nota bajo el mantel para que se retirara.",
+      fullStory:
+        "Fermín llevaba cinco años presentándose al concurso y siempre perdía contra la abuela Eulalia. Este año había invertido sus ahorros en una tortilla 'revolucionaria' que volvió a quedar segunda. Desesperado, compró valeriana concentrada, aprovechó que la abuela fue a por sal para verterla en su tortilla y escribió la nota para asustarla. No pretendía drogar al jurado, solo 'adormilarlo lo justo' para que el concurso se repitiera y él pudiera ganar la próxima vez.",
+      criticalClues: [
+        "Tiene harina en las manos de amasar su propia tortilla.",
+        "El frasco de valeriana lleva el precio de la herboristería donde lo compró.",
+        "Su letra coincide con la nota bajo el mantel."
+      ]
+    },
+    dossiersByPlayerCount: adaptRolesForCount([
+      {
+        roleId: "rol_1",
+        roleName: "La Abuela Eulalia",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La abuela jura que su tortilla solo lleva huevo, patata y cebolla."],
+        dossier: {
+          roleTitle: "La Leyenda de la Tortilla",
+          avatar: "👵",
+          isCulprit: false,
+          movements: [
+            { time: "12:30", place: "Carpa", detail: "Presentaste tu tortilla al jurado." },
+            { time: "12:55", place: "Carpa", detail: "Fuiste a por sal y dejaste la tortilla sola." },
+            { time: "13:00", place: "Mesa del Jurado", detail: "Serviste tu tortilla con orgullo." },
+            { time: "13:30", place: "Carpa", detail: "Viste dormir al jurado y te santiguaste." }
+          ],
+          knownInfo: [
+            "Tu tortilla solo lleva huevo, patata y cebolla.",
+            "Dejaste la tortilla sola dos minutos para ir a por sal.",
+            "Viste a Fermín merodear por tu mesa en ese momento."
+          ],
+          secretObjective: "Declara que dejaste la tortilla sola y que Fermín merodeó por tu mesa.",
+          suspicionNotes: "Los dos minutos sin vigilancia coinciden con la manipulación."
+        }
+      },
+      {
+        roleId: "rol_2",
+        roleName: "El Presentador",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El presentador vio a Fermín salir de la herboristería a las 12:40."],
+        dossier: {
+          roleTitle: "La Voz del Concurso",
+          avatar: "🎤",
+          isCulprit: false,
+          movements: [
+            { time: "12:30", place: "Carpa", detail: "Presentando a los finalistas." },
+            { time: "12:40", place: "Plaza", detail: "Viste a Fermín salir de la herboristería." },
+            { time: "13:00", place: "Carpa", detail: "Anunciaste la tortilla de la abuela." },
+            { time: "13:35", place: "Carpa", detail: "Suspendiste el concurso." }
+          ],
+          knownInfo: [
+            "Fermín salió de la herboristería a las 12:40 con una bolsa.",
+            "La bolsa hacía ruido a frasco.",
+            "Tú no tocas las tortillas."
+          ],
+          secretObjective: "Declara la bolsa de herboristería que trajo Fermín.",
+          suspicionNotes: "La bolsa contiene el frasco de valeriana."
+        }
+      },
+      {
+        roleId: "rol_3",
+        roleName: "Fermín",
+        isCulprit: true,
+        extraCluesIfFewerPlayers: ["Fermín tiene harina en las manos y el ticket de la herboristería en el bolsillo."],
+        dossier: {
+          roleTitle: "El Finalista Derrotado (¡ERES EL CULPABLE!)",
+          avatar: "🍳",
+          isCulprit: true,
+          movements: [
+            { time: "12:40", place: "Herboristería", detail: "Compraste valeriana concentrada." },
+            { time: "12:55", place: "Carpa", detail: "Vertiste la valeriana en la tortilla de la abuela." },
+            { time: "13:00", place: "Carpa", detail: "Dejaste la nota bajo el mantel." },
+            { time: "13:30", place: "Carpa", detail: "Fingiste sorpresa al ver dormir al jurado." }
+          ],
+          knownInfo: [
+            "Llevas cinco años perdiendo contra la abuela Eulalia.",
+            "Compraste valeriana concentrada en la herboristería.",
+            "Puedes culpar al presentador diciendo que él quería cancelar el concurso."
+          ],
+          secretObjective: "Culpa al presentador y di que la harina es de tu propia tortilla.",
+          suspicionNotes: "Di que el ticket es de hace meses y que la nota no es tuya."
+        }
+      },
+      {
+        roleId: "rol_4",
+        roleName: "El Juez Gastronómico",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El juez recuerda que la tortilla de la abuela tenía 'un regusto dulzón raro'."],
+        dossier: {
+          roleTitle: "El Paladar Experto",
+          avatar: "👨‍🍳",
+          isCulprit: false,
+          movements: [
+            { time: "12:30", place: "Mesa del Jurado", detail: "Catando las tortillas finalistas." },
+            { time: "13:00", place: "Mesa del Jurado", detail: "Notaste un regusto dulzón raro en la tortilla de la abuela." },
+            { time: "13:30", place: "Mesa del Jurado", detail: "Te dormiste sobre el plato." },
+            { time: "13:45", place: "Carpa", detail: "Te despertaron y declaraste." }
+          ],
+          knownInfo: [
+            "La tortilla de la abuela tenía un regusto dulzón raro.",
+            "El regusto no era de la receta original.",
+            "Tú no tocas las tortillas: solo las catas."
+          ],
+          secretObjective: "Declara el regusto dulzón raro de la tortilla de la abuela.",
+          suspicionNotes: "El regusto coincide con la valeriana."
+        }
+      },
+      {
+        roleId: "rol_5",
+        roleName: "La Hermana de Fermín",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La hermana de Fermín lo vio comprar valeriana 'para dormir' la noche anterior."],
+        dossier: {
+          roleTitle: "La Testigo Familiar",
+          avatar: "🙍‍♀️",
+          isCulprit: false,
+          movements: [
+            { time: "12:30", place: "Carpa", detail: "Animando a su hermano Fermín." },
+            { time: "13:00", place: "Carpa", detail: "Viste a Fermín merodear por la mesa de la abuela." },
+            { time: "13:30", place: "Carpa", detail: "Se durmió el jurado y ella se quedó helada." },
+            { time: "13:45", place: "Carpa", detail: "Declaró lo que sabía." }
+          ],
+          knownInfo: [
+            "Fermín compró valeriana la noche anterior 'para dormir'.",
+            "Lo viste merodear por la mesa de la abuela a las 12:55.",
+            "Tú no tocas las tortillas."
+          ],
+          secretObjective: "Declara que Fermín compró valeriana y merodeó por la mesa de la abuela.",
+          suspicionNotes: "La compra y la merodeada cierran el círculo."
+        }
+      },
+      {
+        roleId: "rol_6",
+        roleName: "El Fotógrafo del Concurso",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El fotógrafo tiene una foto de Fermín vertiendo algo en la tortilla a las 12:55."],
+        dossier: {
+          roleTitle: "La Cámara Testigo",
+          avatar: "📷",
+          isCulprit: false,
+          movements: [
+            { time: "12:30", place: "Carpa", detail: "Fotografiando a los finalistas." },
+            { time: "12:55", place: "Carpa", detail: "Fotografiaste a Fermín vertiendo algo en la tortilla." },
+            { time: "13:30", place: "Carpa", detail: "Fotografiaste al jurado dormido." },
+            { time: "13:45", place: "Carpa", detail: "Mostraste la foto al presentador." }
+          ],
+          knownInfo: [
+            "Tienes una foto de Fermín vertiendo algo en la tortilla a las 12:55.",
+            "En la foto se ve un frasco pequeño en su mano.",
+            "Tú no tocas las tortillas: solo las fotografías."
+          ],
+          secretObjective: "Muestra la foto de Fermín vertiendo el frasco en la tortilla.",
+          suspicionNotes: "La foto es prueba irrefutable."
+        }
+      },
+      {
+        roleId: "rol_7",
+        roleName: "La Limpiadora de la Carpa",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La limpiadora encontró el frasco vacío de valeriana en la basura a las 13:10."],
+        dossier: {
+          roleTitle: "La Testigo de la Basura",
+          avatar: "🧽",
+          isCulprit: false,
+          movements: [
+            { time: "12:30", place: "Carpa", detail: "Reponiendo servilletas." },
+            { time: "13:10", place: "Basura", detail: "Encontraste el frasco vacío de valeriana." },
+            { time: "13:30", place: "Carpa", detail: "Viste dormir al jurado." },
+            { time: "13:45", place: "Carpa", detail: "Entregaste el frasco al presentador." }
+          ],
+          knownInfo: [
+            "El frasco vacío de valeriana estaba en la basura a las 13:10.",
+            "La etiqueta lleva el precio de la herboristería del barrio.",
+            "Tú no tocas las tortillas."
+          ],
+          secretObjective: "Entrega el frasco vacío de valeriana encontrado en la basura.",
+          suspicionNotes: "El frasco conecta con la compra de Fermín."
+        }
+      }
+    ])
+  },
+
+{
+    id: 16,
+    slug: "asesinato-en-el-crucero",
+    title: "Asesinato en el Crucero de Lujo",
+    subtitle: "El capitán aparece muerto en el camarote del armador",
+    category: "Misterio Clásico",
+    emoji: "🚢",
+    location: "Crucero 'Estrella del Mar', camarote del armador",
+    incidentTime: "A las 02:15, en alta mar",
+    synopsis:
+      "El capitán Horacio aparece muerto en el camarote del armador con un salvavidas atado al cuello. El barco está en alta mar y nadie puede bajar. El armador jura que no estaba en su camarote. La tripulación y los pasajeros VIP quedan retenidos hasta llegar a puerto.",
+    publicTimeline: [
+      { time: "01:30", description: "El capitán Horacio hace su ronda nocturna por cubierta.", location: "Cubierta Superior" },
+      { time: "01:45", description: "El capitán es visto entrar en el camarote del armador.", location: "Pasillo VIP" },
+      { time: "02:15", description: "Se oye un golpe y el camarote queda en silencio.", location: "Camarote del Armador" },
+      { time: "02:30", description: "El mayordomo entra y encuentra el cuerpo.", location: "Camarote del Armador" },
+      { time: "02:45", description: "Se retiene a la tripulación y a los pasajeros VIP.", location: "Salón Principal" }
+    ],
+    progressiveClues: [
+      {
+        minute: 3,
+        title: "El Salvavidas con Nudo Marinero",
+        badge: "PRUEBA 1 · MIN 3",
+        description: "El salvavidas que estranguló al capitán lleva un nudo marinero perfecto, del tipo que solo sabe hacer quien ha navegado años. En el nudo hay restos de tabaco de pipa.",
+        impactQuestion: "¿Quién sabe hacer nudos marineros y fuma en pipa?"
+      },
+      {
+        minute: 6,
+        title: "La Carta del Armador en el Bolsillo",
+        badge: "PRUEBA 2 · MIN 6",
+        description: "En el bolsillo del capitán hay una carta del armador: 'Horacio, si no cambias el rumbo esta noche, te relevo del mando. Última advertencia.'",
+        impactQuestion: "¿Quién quería cambiar el rumbo y amenazó al capitán?"
+      }
+    ],
+    interrogationQuestions: [
+      "¿Dónde estaba cada uno entre las 01:30 y las 02:30?",
+      "¿Quién sabe hacer nudos marineros y fuma en pipa?",
+      "¿Por qué el armador quería cambiar el rumbo?",
+      "¿Quién entró en el camarote del armador antes del golpe?"
+    ],
+    solution: {
+      culpritNameRole: "Don Ricardo (El Armador / Papel 3)",
+      crimeTime: "02:00",
+      keyMethod: "Citó al capitán en su camarote, lo estranguló con un salvavidas haciendo un nudo marinero para incriminar a un tripulante y escondió la carta amenazante en el bolsillo del capitán para desviar sospechas.",
+      fullStory:
+        "Don Ricardo había ordenado al capitán cambiar el rumbo hacia una isla privada para una reunión de negocios turbios. El capitán se negó por seguridad de los pasajeros. Don Ricardo lo citó en su camarote a las 02:00, lo estranguló con un salvavidas haciendo un nudo marinero (aprendido en su juventud) y metió la carta amenazante en el bolsillo del capitán para que pareciera que él era la víctima de una amenaza. Luego fingió estar en el salón principal.",
+      criticalClues: [
+        "Sabe hacer nudos marineros de su juventud en la marina.",
+        "Fuma en pipa tabaco que deja restos en el nudo.",
+        "Su coartada en el salón principal tiene un hueco de 20 minutos."
+      ]
+    },
+    dossiersByPlayerCount: adaptRolesForCount([
+      {
+        roleId: "rol_1",
+        roleName: "El Mayordomo",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El mayordomo encontró la carta amenazante en el bolsillo del capitán."],
+        dossier: {
+          roleTitle: "El Servidor Silencioso",
+          avatar: "🤵",
+          isCulprit: false,
+          movements: [
+            { time: "01:30", place: "Pasillo VIP", detail: "Preparando el servicio de noche." },
+            { time: "01:45", place: "Pasillo VIP", detail: "Viste al capitán entrar en el camarote del armador." },
+            { time: "02:30", place: "Camarote", detail: "Entraste y encontraste el cuerpo." },
+            { time: "02:45", place: "Salón Principal", detail: "Declaraste a la policía." }
+          ],
+          knownInfo: [
+            "Viste al capitán entrar en el camarote del armador a las 01:45.",
+            "El armador no estaba en el salón entre las 01:50 y las 02:10.",
+            "Tú no fumas y no sabes hacer nudos."
+          ],
+          secretObjective: "Declara que el armador desapareció del salón entre las 01:50 y las 02:10.",
+          suspicionNotes: "El hueco de coartada del armador coincide con el crimen."
+        }
+      },
+      {
+        roleId: "rol_2",
+        roleName: "El Segundo Oficial",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El segundo oficial confirma que el armador sabe hacer nudos marineros."],
+        dossier: {
+          roleTitle: "El Marinero Leal",
+          avatar: "⚓",
+          isCulprit: false,
+          movements: [
+            { time: "01:30", place: "Puente", detail: "De guardia en el puente." },
+            { time: "02:00", place: "Puente", detail: "Notaste que el rumbo no había cambiado." },
+            { time: "02:30", place: "Pasillo VIP", detail: "Acudiste al oír el grito del mayordomo." },
+            { time: "02:45", place: "Salón Principal", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "El armador sabe hacer nudos marineros de su juventud.",
+            "El capitán se negó a cambiar el rumbo por seguridad.",
+            "Tú estabas en el puente toda la noche."
+          ],
+          secretObjective: "Declara que el armador sabe hacer nudos marineros.",
+          suspicionNotes: "El nudo marinero apunta al armador."
+        }
+      },
+      {
+        roleId: "rol_3",
+        roleName: "Don Ricardo",
+        isCulprit: true,
+        extraCluesIfFewerPlayers: ["Don Ricardo fuma en pipa y tiene tabaco en los puños."],
+        dossier: {
+          roleTitle: "El Armador Ambicioso (¡ERES EL CULPABLE!)",
+          avatar: "💰",
+          isCulprit: true,
+          movements: [
+            { time: "01:50", place: "Camarote", detail: "Citó al capitán para exigirle cambiar el rumbo." },
+            { time: "02:00", place: "Camarote", detail: "Lo estrangulaste con el salvavidas y el nudo marinero." },
+            { time: "02:10", place: "Pasillo", detail: "Volviste al salón fingiendo calma." },
+            { time: "02:45", place: "Salón Principal", detail: "Fingiste sorpresa." }
+          ],
+          knownInfo: [
+            "Querías cambiar el rumbo hacia una isla privada para negocios turbios.",
+            "Sabes hacer nudos marineros de tu juventud.",
+            "Puedes culpar al segundo oficial diciendo que él también sabe nudos."
+          ],
+          secretObjective: "Culpa al segundo oficial y di que tu pipa es de coleccionista.",
+          suspicionNotes: "Di que el tabaco en los puños es de ayer y que no saliste del salón."
+        }
+      },
+      {
+        roleId: "rol_4",
+        roleName: "La Esposa del Armador",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La esposa del armador lo vio salir del salón a las 01:50."],
+        dossier: {
+          roleTitle: "La Primera Dama del Barco",
+          avatar: "👗",
+          isCulprit: false,
+          movements: [
+            { time: "01:45", place: "Salón Principal", detail: "Charlando con los pasajeros VIP." },
+            { time: "01:50", place: "Salón Principal", detail: "Viste a tu marido salir del salón." },
+            { time: "02:15", place: "Salón Principal", detail: "Notaste su ausencia." },
+            { time: "02:45", place: "Salón Principal", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "Tu marido salió del salón a las 01:50 y volvió a las 02:10.",
+            "Dijo que iba al baño, pero el baño está en la otra dirección.",
+            "Tú no sabes hacer nudos."
+          ],
+          secretObjective: "Declara que tu marido salió del salón entre las 01:50 y las 02:10.",
+          suspicionNotes: "El hueco de coartada es clave."
+        }
+      },
+      {
+        roleId: "rol_5",
+        roleName: "El Médico de a Bordo",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El médico confirma que la muerte fue por estrangulamiento con nudo marinero."],
+        dossier: {
+          roleTitle: "El Galeno del Mar",
+          avatar: "🩺",
+          isCulprit: false,
+          movements: [
+            { time: "01:30", place: "Enfermería", detail: "Revisando el botiquín." },
+            { time: "02:30", place: "Camarote", detail: "Examinaste el cuerpo." },
+            { time: "02:40", place: "Camarote", detail: "Confirmaste el estrangulamiento." },
+            { time: "02:45", place: "Salón Principal", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "La muerte fue por estrangulamiento con un nudo marinero perfecto.",
+            "El nudo solo lo saben hacer marineros experimentados.",
+            "Tú no sabes hacer nudos."
+          ],
+          secretObjective: "Confirma que el nudo marinero es de experto.",
+          suspicionNotes: "El nudo experto acota el círculo."
+        }
+      },
+      {
+        roleId: "rol_6",
+        roleName: "La Cantante del Bar",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La cantante oyó al armador decir: 'si no cambia el rumbo, esta noche se acaba todo'."],
+        dossier: {
+          roleTitle: "La Voz de la Noche",
+          avatar: "🎤",
+          isCulprit: false,
+          movements: [
+            { time: "01:30", place: "Bar", detail: "Cantando en el piano bar." },
+            { time: "01:40", place: "Bar", detail: "Oíste la frase del armador." },
+            { time: "02:30", place: "Bar", detail: "Te enteraste del crimen." },
+            { time: "02:45", place: "Salón Principal", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "Oíste al armador decir: 'si no cambia el rumbo, esta noche se acaba todo'.",
+            "Lo dijo a las 01:40 en el bar.",
+            "Tú no sabes hacer nudos."
+          ],
+          secretObjective: "Declara la frase premonitoria del armador.",
+          suspicionNotes: "La frase demuestra premeditación."
+        }
+      },
+      {
+        roleId: "rol_7",
+        roleName: "El Contramaestre",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El contramaestre confirma que el armador aprendió nudos en su juventud en la marina."],
+        dossier: {
+          roleTitle: "El Veterano del Mar",
+          avatar: "🧭",
+          isCulprit: false,
+          movements: [
+            { time: "01:30", place: "Cubierta", detail: "Revisando las amarras." },
+            { time: "01:45", place: "Cubierta", detail: "Viste al capitán bajar al pasillo VIP." },
+            { time: "02:30", place: "Pasillo VIP", detail: "Acudiste al oír el grito." },
+            { time: "02:45", place: "Salón Principal", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "El armador aprendió nudos en su juventud en la marina.",
+            "El nudo del salvavidas es de su estilo.",
+            "Tú estabas en cubierta toda la noche."
+          ],
+          secretObjective: "Declara que el armador aprendió nudos en la marina.",
+          suspicionNotes: "El estilo del nudo coincide con el del armador."
+        }
+      }
+    ])
+  },
+
+{
+    id: 17,
+    slug: "el-caso-del-concurso-de-silbidos",
+    title: "El Caso del Concurso de Silbidos",
+    subtitle: "La campeona aparece muda en el escenario",
+    category: "Humor Absurdo",
+    emoji: "🎶",
+    location: "Auditorio Municipal de Villasilbo",
+    incidentTime: "A las 19:00, en la final del concurso",
+    synopsis:
+      "La campeona del Concurso Nacional de Silbidos, Doña Nieves, aparece muda en el escenario. Abre la boca y no sale ni un sonido. El jurado no sabe qué puntuar. Alguien ha rociado su botella de agua con un espray anestésico de garganta. El premio está en juego.",
+    publicTimeline: [
+      { time: "18:30", description: "Doña Nieves calienta la voz en el camerino.", location: "Camerino" },
+      { time: "18:45", description: "Bebe de su botella de agua antes de salir.", location: "Camerino" },
+      { time: "19:00", description: "Sale al escenario y no emite ningún sonido.", location: "Escenario" },
+      { time: "19:05", description: "El jurado suspende la actuación.", location: "Escenario" },
+      { time: "19:15", description: "Se retiene a los finalistas y al personal.", location: "Auditorio" }
+    ],
+    progressiveClues: [
+      {
+        minute: 3,
+        title: "El Espray Anestésico en el Camerino",
+        badge: "PRUEBA 1 · MIN 3",
+        description: "En la papelera del camerino hay un espray vacío de anestésico de garganta 'Mudez Total'. La etiqueta lleva el precio de una farmacia y una huella de labial fucsia.",
+        impactQuestion: "¿Quién compró el espray en la farmacia y lleva labial fucsia?"
+      },
+      {
+        minute: 6,
+        title: "La Nota en el Espejo del Camerino",
+        badge: "PRUEBA 2 · MIN 6",
+        description: "En el espejo del camerino, escrito con labial fucsia: 'Nieves, tu silbido se acabó. El trono es mío.'",
+        impactQuestion: "¿Quién quería el trono de campeona y escribió con labial fucsia?"
+      }
+    ],
+    interrogationQuestions: [
+      "¿Dónde estaba cada uno entre las 18:30 y las 19:00?",
+      "¿Quién compró el espray anestésico en la farmacia?",
+      "¿Quién lleva labial fucsia?",
+      "¿Quién quería el trono de campeona?"
+    ],
+    solution: {
+      culpritNameRole: "Lorena (La Subcampeona Resentida / Papel 3)",
+      crimeTime: "18:40",
+      keyMethod: "Compró el espray anestésico en la farmacia, lo roció en la botella de agua de Doña Nieves mientras ella calentaba la voz y escribió la amenaza en el espejo con su labial fucsia.",
+      fullStory:
+        "Lorena llevaba tres años quedando segunda detrás de Doña Nieves. Este año había entrenado día y noche para ganar, pero el jurado seguía prefiriendo el silbido de la veterana. Desesperada, compró el espray anestésico, entró en el camerino a las 18:40 mientras Doña Nieves calentaba la voz en el pasillo, roció la botella y escribió la amenaza en el espejo. No pretendía dejarla muda para siempre, solo 'un par de horas' para que no pudiera competir.",
+      criticalClues: [
+        "Lleva labial fucsia a diario.",
+        "El ticket de la farmacia está en su bolso.",
+        "Fue vista entrando en el camerino a las 18:40."
+      ]
+    },
+    dossiersByPlayerCount: adaptRolesForCount([
+      {
+        roleId: "rol_1",
+        roleName: "Doña Nieves",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["Doña Nieves jura que su botella sabía raro esta vez."],
+        dossier: {
+          roleTitle: "La Campeona Muda",
+          avatar: "👵",
+          isCulprit: false,
+          movements: [
+            { time: "18:30", place: "Pasillo", detail: "Calentando la voz en el pasillo." },
+            { time: "18:45", place: "Camerino", detail: "Bebiste de la botella y notaste un sabor raro." },
+            { time: "19:00", place: "Escenario", detail: "Abrías la boca y no salía nada." },
+            { time: "19:15", place: "Auditorio", detail: "Escribiste en un papel: 'alguien me ha drogado'." }
+          ],
+          knownInfo: [
+            "Tu botella sabía rara esta vez.",
+            "Dejaste la botella sola en el camerino mientras calentabas la voz.",
+            "Viste a Lorena merodear por el camerino."
+          ],
+          secretObjective: "Declara que dejaste la botella sola y que Lorena merodeó por el camerino.",
+          suspicionNotes: "La merodeada de Lorena coincide con la manipulación."
+        }
+      },
+      {
+        roleId: "rol_2",
+        roleName: "El Presentador",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El presentador vio a Lorena salir de la farmacia a las 18:20."],
+        dossier: {
+          roleTitle: "La Voz del Concurso",
+          avatar: "🎤",
+          isCulprit: false,
+          movements: [
+            { time: "18:20", place: "Farmacia", detail: "Viste a Lorena salir con una bolsa." },
+            { time: "18:30", place: "Auditorio", detail: "Presentando a los finalistas." },
+            { time: "19:00", place: "Escenario", detail: "Anunciaste la actuación de Doña Nieves." },
+            { time: "19:15", place: "Auditorio", detail: "Retuviste a todos." }
+          ],
+          knownInfo: [
+            "Lorena salió de la farmacia a las 18:20 con una bolsa.",
+            "La bolsa hacía ruido a espray.",
+            "Tú no tocas las botellas de los concursantes."
+          ],
+          secretObjective: "Declara la bolsa de farmacia que trajo Lorena.",
+          suspicionNotes: "La bolsa contiene el espray anestésico."
+        }
+      },
+      {
+        roleId: "rol_3",
+        roleName: "Lorena",
+        isCulprit: true,
+        extraCluesIfFewerPlayers: ["Lorena tiene el ticket de la farmacia y labial fucsia."],
+        dossier: {
+          roleTitle: "La Subcampeona Resentida (¡ERES LA CULPABLE!)",
+          avatar: "🎶",
+          isCulprit: true,
+          movements: [
+            { time: "18:20", place: "Farmacia", detail: "Compraste el espray anestésico." },
+            { time: "18:40", place: "Camerino", detail: "Rociaste la botella y escribiste la amenaza con labial." },
+            { time: "18:50", place: "Vestuario", detail: "Te cambiaste como si nada." },
+            { time: "19:00", place: "Escenario", detail: "Fingiste sorpresa al ver muda a Doña Nieves." }
+          ],
+          knownInfo: [
+            "Llevas tres años quedando segunda detrás de Doña Nieves.",
+            "Compraste el espray anestésico en la farmacia.",
+            "Puedes culpar al presentador diciendo que él quería cancelar el concurso."
+          ],
+          secretObjective: "Culpa al presentador y di que el ticket es de hace meses.",
+          suspicionNotes: "Di que el labial fucsia es de otra marca y que no entraste al camerino."
+        }
+      },
+      {
+        roleId: "rol_4",
+        roleName: "El Jurado Presidente",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El jurado recuerda que la botella de Doña Nieves tenía un olor químico."],
+        dossier: {
+          roleTitle: "El Oído Absoluto",
+          avatar: "👂",
+          isCulprit: false,
+          movements: [
+            { time: "18:30", place: "Mesa del Jurado", detail: "Repasando las puntuaciones." },
+            { time: "18:50", place: "Mesa del Jurado", detail: "Notaste un olor químico en la botella de Doña Nieves." },
+            { time: "19:00", place: "Escenario", detail: "Puntuaste un cero." },
+            { time: "19:15", place: "Auditorio", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "La botella de Doña Nieves tenía un olor químico raro.",
+            "Ese olor no era del agua.",
+            "Tú no tocas las botellas."
+          ],
+          secretObjective: "Declara el olor químico de la botella.",
+          suspicionNotes: "El olor coincide con el espray."
+        }
+      },
+      {
+        roleId: "rol_5",
+        roleName: "La Compañera de Doña Nieves",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La compañera oyó a Lorena decir: 'esta vez el silbido no sale'."],
+        dossier: {
+          roleTitle: "La Oreja del Pasillo",
+          avatar: "👂",
+          isCulprit: false,
+          movements: [
+            { time: "18:35", place: "Pasillo", detail: "Oíste la frase de Lorena." },
+            { time: "18:45", place: "Pasillo", detail: "Viste a Doña Nieves beber." },
+            { time: "19:00", place: "Escenario", detail: "Te quedaste helada." },
+            { time: "19:15", place: "Auditorio", detail: "Contaste la frase." }
+          ],
+          knownInfo: [
+            "Oíste a Lorena decir: 'esta vez el silbido no sale'.",
+            "Lo dijo a las 18:35 en el pasillo.",
+            "Tú no tocas las botellas."
+          ],
+          secretObjective: "Declara la frase premonitoria de Lorena.",
+          suspicionNotes: "La frase demuestra premeditación."
+        }
+      },
+      {
+        roleId: "rol_6",
+        roleName: "El Farmacéutico",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El farmacéutico recuerda que Lorena compró el espray 'para una afonía'."],
+        dossier: {
+          roleTitle: "El Boticario del Barrio",
+          avatar: "💊",
+          isCulprit: false,
+          movements: [
+            { time: "18:15", place: "Farmacia", detail: "Atendiendo el mostrador." },
+            { time: "18:20", place: "Farmacia", detail: "Vendiste el espray a Lorena 'para una afonía'." },
+            { time: "19:00", place: "Auditorio", detail: "Te enteraste del crimen." },
+            { time: "19:15", place: "Auditorio", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "Lorena compró el espray anestésico a las 18:20.",
+            "Dijo que era 'para una afonía'.",
+            "Tú no sales de la farmacia."
+          ],
+          secretObjective: "Declara que vendiste el espray a Lorena.",
+          suspicionNotes: "La compra conecta con el frasco."
+        }
+      },
+      {
+        roleId: "rol_7",
+        roleName: "La Limpiadora del Auditorio",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La limpiadora encontró el espray vacío en la papelera a las 18:50."],
+        dossier: {
+          roleTitle: "La Testigo de la Papelera",
+          avatar: "🧽",
+          isCulprit: false,
+          movements: [
+            { time: "18:30", place: "Camerino", detail: "Reponiendo toallas." },
+            { time: "18:50", place: "Papelera", detail: "Encontraste el espray vacío." },
+            { time: "19:00", place: "Escenario", detail: "Viste a Doña Nieves muda." },
+            { time: "19:15", place: "Auditorio", detail: "Entregaste el espray." }
+          ],
+          knownInfo: [
+            "El espray vacío estaba en la papelera a las 18:50.",
+            "La etiqueta lleva el precio de la farmacia del barrio.",
+            "Tú no tocas las botellas."
+          ],
+          secretObjective: "Entrega el espray vacío encontrado en la papelera.",
+          suspicionNotes: "El espray conecta con la compra de Lorena."
+        }
+      }
+    ])
+  },
+
+{
+    id: 18,
+    slug: "asesinato-en-el-museo",
+    title: "Asesinato en el Museo de Cera",
+    subtitle: "El conservador aparece disfrazado de su propia estatua",
+    category: "Misterio Clásico",
+    emoji: "🗿",
+    location: "Museo de Cera de Villafigura",
+    incidentTime: "A las 21:00, tras el cierre",
+    synopsis:
+      "El conservador del museo, Don Anselmo, aparece muerto en la sala de personajes históricos, disfrazado con el traje de su propia estatua de cera. Alguien lo ha colocado en el pedestal y ha puesto su estatua en el suelo. La sala estaba cerrada con llave.",
+    publicTimeline: [
+      { time: "20:30", description: "Don Anselmo despide a los últimos visitantes.", location: "Entrada" },
+      { time: "20:40", description: "Se oye un ruido en la sala de personajes históricos.", location: "Sala Histórica" },
+      { time: "20:55", description: "La alarma de la sala se desactiva.", location: "Sala Histórica" },
+      { time: "21:00", description: "La vigilante encuentra el cuerpo en el pedestal.", location: "Sala Histórica" },
+      { time: "21:15", description: "Se retiene al personal del museo.", location: "Museo" }
+    ],
+    progressiveClues: [
+      {
+        minute: 3,
+        title: "La Llave del Conservador en el Suelo",
+        badge: "PRUEBA 1 · MIN 3",
+        description: "Junto al pedestal hay una llave maestra del museo con una etiqueta: 'Sala Histórica - copia de seguridad'. No es la llave original de Don Anselmo, que sigue en su despacho.",
+        impactQuestion: "¿Quién tenía una copia de la llave maestra de la sala histórica?"
+      },
+      {
+        minute: 6,
+        title: "El Guante de Terciopelo en el Pedestal",
+        badge: "PRUEBA 2 · MIN 6",
+        description: "Bajo el pedestal hay un guante de terciopelo blanco con una mancha de cera caliente. El personal de conservación usa guantes de algodón, no de terciopelo.",
+        impactQuestion: "¿Quién usa guantes de terciopelo blanco en el museo?"
+      }
+    ],
+    interrogationQuestions: [
+      "¿Dónde estaba cada uno entre las 20:30 y las 21:00?",
+      "¿Quién tenía una copia de la llave maestra?",
+      "¿Por qué alguien disfrazaría a Don Anselmo de su propia estatua?",
+      "¿Quién usa guantes de terciopelo blanco?"
+    ],
+    solution: {
+      culpritNameRole: "Teodoro (El Restaurador Despedido / Papel 3)",
+      crimeTime: "20:45",
+      keyMethod: "Usó su copia de la llave maestra para entrar, golpeó a Don Anselmo con el brazo de una estatua, lo disfrazó con el traje de su propia figura y lo colocó en el pedestal para que pareciera una broma macabra.",
+      fullStory:
+        "Teodoro había sido despedido la semana anterior por Don Anselmo tras un incidente con una figura de cera. Guardaba una copia de la llave maestra y conocía todos los rincones del museo. Esa noche entró, discutió con Don Anselmo, lo golpeó con el brazo de una estatua y, en un arrebato teatral, lo vistió con el traje de su propia figura y lo sentó en el pedestal. Dejó su guante de terciopelo (usado para manipular cera caliente) bajo el pedestal.",
+      criticalClues: [
+        "Tenía una copia de la llave maestra que no devolvió al ser despedido.",
+        "Usa guantes de terciopelo blanco para manipular cera caliente.",
+        "Fue visto merodeando por el museo esa tarde."
+      ]
+    },
+    dossiersByPlayerCount: adaptRolesForCount([
+      {
+        roleId: "rol_1",
+        roleName: "La Vigilante",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La vigilante vio a Teodoro salir del museo a las 20:50."],
+        dossier: {
+          roleTitle: "La Guardiana Nocturna",
+          avatar: "🔦",
+          isCulprit: false,
+          movements: [
+            { time: "20:30", place: "Entrada", detail: "Despidiendo a los últimos visitantes." },
+            { time: "20:50", place: "Salida de Servicio", detail: "Viste a Teodoro salir del museo." },
+            { time: "21:00", place: "Sala Histórica", detail: "Encontraste el cuerpo en el pedestal." },
+            { time: "21:15", place: "Museo", detail: "Retuviste al personal." }
+          ],
+          knownInfo: [
+            "Viste a Teodoro salir del museo a las 20:50.",
+            "Teodoro fue despedido la semana pasada.",
+            "Tú no tienes llave de la sala histórica."
+          ],
+          secretObjective: "Declara que viste a Teodoro salir del museo a las 20:50.",
+          suspicionNotes: "La salida de Teodoro coincide con el crimen."
+        }
+      },
+      {
+        roleId: "rol_2",
+        roleName: "La Restauradora",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La restauradora confirma que los guantes de terciopelo son de Teodoro."],
+        dossier: {
+          roleTitle: "La Artista de la Cera",
+          avatar: "🖌️",
+          isCulprit: false,
+          movements: [
+            { time: "20:30", place: "Taller", detail: "Limpiando los pinceles." },
+            { time: "20:45", place: "Taller", detail: "Oíste un golpe en la sala histórica." },
+            { time: "21:00", place: "Sala Histórica", detail: "Acudiste al oír el grito de la vigilante." },
+            { time: "21:15", place: "Museo", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "Los guantes de terciopelo blanco son de Teodoro.",
+            "Él los usaba para manipular cera caliente.",
+            "Tú usas guantes de algodón."
+          ],
+          secretObjective: "Identifica los guantes de terciopelo como de Teodoro.",
+          suspicionNotes: "Los guantes son prueba material."
+        }
+      },
+      {
+        roleId: "rol_3",
+        roleName: "Teodoro",
+        isCulprit: true,
+        extraCluesIfFewerPlayers: ["Teodoro tiene una copia de la llave maestra y le falta un guante."],
+        dossier: {
+          roleTitle: "El Restaurador Despedido (¡ERES EL CULPABLE!)",
+          avatar: "🗿",
+          isCulprit: true,
+          movements: [
+            { time: "20:40", place: "Sala Histórica", detail: "Entraste con la copia de la llave maestra." },
+            { time: "20:45", place: "Sala Histórica", detail: "Golpeaste a Don Anselmo y lo disfrazaste con el traje de su figura." },
+            { time: "20:50", place: "Salida de Servicio", detail: "Saliste a toda prisa." },
+            { time: "21:15", place: "Museo", detail: "Fingiste sorpresa al volver." }
+          ],
+          knownInfo: [
+            "Don Anselmo te despidió la semana pasada y le guardas rencor.",
+            "Tienes una copia de la llave maestra que no devolviste.",
+            "Puedes culpar a la restauradora diciendo que ella también usa guantes."
+          ],
+          secretObjective: "Culpa a la restauradora y di que perdiste el guante hace días.",
+          suspicionNotes: "Di que la llave es de tu época y que no entraste al museo."
+        }
+      },
+      {
+        roleId: "rol_4",
+        roleName: "El Guía Turístico",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El guía oyó a Teodoro decir: 'Anselmo pagará por esto'."],
+        dossier: {
+          roleTitle: "La Voz del Museo",
+          avatar: "🎫",
+          isCulprit: false,
+          movements: [
+            { time: "20:30", place: "Entrada", detail: "Recogiendo el material de las visitas." },
+            { time: "20:35", place: "Pasillo", detail: "Oíste la frase de Teodoro." },
+            { time: "21:00", place: "Sala Histórica", detail: "Acudiste al oír el grito." },
+            { time: "21:15", place: "Museo", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "Oíste a Teodoro decir: 'Anselmo pagará por esto'.",
+            "Lo dijo a las 20:35 en el pasillo.",
+            "Tú no tienes llave de la sala histórica."
+          ],
+          secretObjective: "Declara la frase premonitoria de Teodoro.",
+          suspicionNotes: "La frase demuestra premeditación."
+        }
+      },
+      {
+        roleId: "rol_5",
+        roleName: "La Taquillera",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La taquillera vio a Teodoro entrar al museo a las 20:35 con una bolsa."],
+        dossier: {
+          roleTitle: "La Cara de la Entrada",
+          avatar: "🎟️",
+          isCulprit: false,
+          movements: [
+            { time: "20:30", place: "Taquilla", detail: "Cerrando la caja." },
+            { time: "20:35", place: "Entrada", detail: "Viste a Teodoro entrar con una bolsa." },
+            { time: "21:00", place: "Taquilla", detail: "Oíste el grito." },
+            { time: "21:15", place: "Museo", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "Teodoro entró al museo a las 20:35 con una bolsa.",
+            "La bolsa contenía un traje doblado.",
+            "Tú no tienes llave de la sala histórica."
+          ],
+          secretObjective: "Declara que Teodoro entró con una bolsa con un traje.",
+          suspicionNotes: "La bolsa con el traje conecta con el disfraz."
+        }
+      },
+      {
+        roleId: "rol_6",
+        roleName: "El Electricista",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El electricista desactivó la alarma a las 20:55 por una falsa avería."],
+        dossier: {
+          roleTitle: "El Hombre de los Fusibles",
+          avatar: "💡",
+          isCulprit: false,
+          movements: [
+            { time: "20:30", place: "Sótano", detail: "Revisando el cuadro eléctrico." },
+            { time: "20:55", place: "Sala Histórica", detail: "Desactivaste la alarma por una falsa avería." },
+            { time: "21:00", place: "Pasillo", detail: "Oíste el grito." },
+            { time: "21:15", place: "Museo", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "La alarma de la sala histórica se desactivó a las 20:55.",
+            "Alguien manipuló el cuadro eléctrico antes que tú.",
+            "Tú no tocas las estatuas."
+          ],
+          secretObjective: "Declara que la alarma fue manipulada antes de las 20:55.",
+          suspicionNotes: "La manipulación de la alarma apunta a alguien con conocimientos."
+        }
+      },
+      {
+        roleId: "rol_7",
+        roleName: "La Limpiadora",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La limpiadora encontró el otro guante de terciopelo en el taller de Teodoro."],
+        dossier: {
+          roleTitle: "La Testigo del Taller",
+          avatar: "🧽",
+          isCulprit: false,
+          movements: [
+            { time: "20:30", place: "Taller", detail: "Limpiando el taller." },
+            { time: "20:50", place: "Taller", detail: "Encontraste el otro guante de terciopelo de Teodoro." },
+            { time: "21:00", place: "Sala Histórica", detail: "Acudiste al oír el grito." },
+            { time: "21:15", place: "Museo", detail: "Entregaste el guante." }
+          ],
+          knownInfo: [
+            "El otro guante de terciopelo de Teodoro estaba en el taller.",
+            "Teodoro lo olvidó al salir corriendo.",
+            "Tú no tocas las estatuas."
+          ],
+          secretObjective: "Entrega el otro guante de terciopelo de Teodoro.",
+          suspicionNotes: "El guante emparejado cierra el caso."
+        }
+      }
+    ])
+  },
+
+{
+    id: 19,
+    slug: "el-misterio-del-concurso-de-calcetines",
+    title: "El Misterio del Concurso de Calcetines",
+    subtitle: "El ganador aparece descalzo en el escenario",
+    category: "Humor Absurdo",
+    emoji: "🧦",
+    location: "Centro Cívico de Villacalcetín",
+    incidentTime: "A las 18:00, en la final del concurso",
+    synopsis:
+      "El campeón del Concurso Nacional de Calcetines, Don Prudencio, aparece descalzo en el escenario. Sus calcetines de la suerte han desaparecido. El jurado no puede puntuar unos pies desnudos. Alguien ha robado los calcetines del camerino. El premio está en juego.",
+    publicTimeline: [
+      { time: "17:30", description: "Don Prudencio se cambia en el camerino y deja los calcetines en la silla.", location: "Camerino" },
+      { time: "17:45", description: "Sale al pasillo a calentar los pies.", location: "Pasillo" },
+      { time: "17:55", description: "Vuelve al camerino y los calcetines han desaparecido.", location: "Camerino" },
+      { time: "18:00", description: "Sale al escenario descalzo y el jurado se queda helado.", location: "Escenario" },
+      { time: "18:10", description: "Se retiene a los finalistas y al personal.", location: "Centro Cívico" }
+    ],
+    progressiveClues: [
+      {
+        minute: 3,
+        title: "La Pelusa de Calcetín en el Pasillo",
+        badge: "PRUEBA 1 · MIN 3",
+        description: "En el pasillo hay un rastro de pelusa de calcetín de lana roja que lleva hasta el vestuario de la finalista Lorena. En su taquilla hay una madeja de lana roja idéntica.",
+        impactQuestion: "¿Quién tiene lana roja idéntica a la pelusa del pasillo?"
+      },
+      {
+        minute: 6,
+        title: "La Nota en el Camerino",
+        badge: "PRUEBA 2 · MIN 6",
+        description: "Bajo la silla del camerino hay una nota: 'Prudencio, tus calcetines son míos. Sin ellos no ganas. Retírate y no habrá problemas.'",
+        impactQuestion: "¿Quién quería retirarse del concurso y amenazó con robar los calcetines?"
+      }
+    ],
+    interrogationQuestions: [
+      "¿Dónde estaba cada uno entre las 17:30 y las 18:00?",
+      "¿Quién tiene lana roja idéntica a la pelusa?",
+      "¿Quién quería retirarse del concurso?",
+      "¿Quién entró en el camerino mientras Don Prudencio calentaba los pies?"
+    ],
+    solution: {
+      culpritNameRole: "Lorena (La Finalista Envidiosa / Papel 3)",
+      crimeTime: "17:50",
+      keyMethod: "Entró en el camerino mientras Don Prudencio calentaba los pies en el pasillo, robó los calcetines de la suerte y dejó la nota para que se retirara. Escondió los calcetines en su madeja de lana roja.",
+      fullStory:
+        "Lorena llevaba dos años perdiendo contra Don Prudencio y sus famosos calcetines de la suerte. Este año había tejido unos calcetines rojos idénticos para 'competir en igualdad', pero el jurado seguía prefiriendo los del campeón. Desesperada, entró en el camerino a las 17:50, robó los calcetines, dejó la nota y los escondió en su madeja de lana. No pretendía hacer daño, solo 'empatar la competición'.",
+      criticalClues: [
+        "La madeja de lana roja de su taquilla es idéntica a la pelusa del pasillo.",
+        "Fue vista entrando en el camerino a las 17:50.",
+        "Su letra coincide con la nota bajo la silla."
+      ]
+    },
+    dossiersByPlayerCount: adaptRolesForCount([
+      {
+        roleId: "rol_1",
+        roleName: "Don Prudencio",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["Don Prudencio jura que sus calcetines eran 'únicos e irremplazables'."],
+        dossier: {
+          roleTitle: "El Campeón Descalzo",
+          avatar: "👴",
+          isCulprit: false,
+          movements: [
+            { time: "17:30", place: "Camerino", detail: "Te cambiaste y dejaste los calcetines en la silla." },
+            { time: "17:45", place: "Pasillo", detail: "Calentabas los pies descalzo." },
+            { time: "17:55", place: "Camerino", detail: "Volviste y los calcetines habían desaparecido." },
+            { time: "18:00", place: "Escenario", detail: "Saliste descalzo y el jurado se quedó helado." }
+          ],
+          knownInfo: [
+            "Dejaste los calcetines en la silla del camerino.",
+            "Viste a Lorena merodear por el pasillo a las 17:50.",
+            "Tus calcetines son únicos e irremplazables."
+          ],
+          secretObjective: "Declara que viste a Lorena merodear por el pasillo.",
+          suspicionNotes: "La merodeada de Lorena coincide con el robo."
+        }
+      },
+      {
+        roleId: "rol_2",
+        roleName: "El Presentador",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El presentador vio a Lorena salir del camerino a las 17:52."],
+        dossier: {
+          roleTitle: "La Voz del Concurso",
+          avatar: "🎤",
+          isCulprit: false,
+          movements: [
+            { time: "17:30", place: "Escenario", detail: "Probando el micrófono." },
+            { time: "17:52", place: "Pasillo", detail: "Viste a Lorena salir del camerino." },
+            { time: "18:00", place: "Escenario", detail: "Anunciaste la actuación de Don Prudencio." },
+            { time: "18:10", place: "Centro Cívico", detail: "Retuviste a todos." }
+          ],
+          knownInfo: [
+            "Lorena salió del camerino a las 17:52.",
+            "Llevaba algo rojo en las manos.",
+            "Tú no entras en los camerinos."
+          ],
+          secretObjective: "Declara que viste a Lorena salir del camerino con algo rojo.",
+          suspicionNotes: "El algo rojo son los calcetines."
+        }
+      },
+      {
+        roleId: "rol_3",
+        roleName: "Lorena",
+        isCulprit: true,
+        extraCluesIfFewerPlayers: ["Lorena tiene una madeja de lana roja con los calcetines escondidos dentro."],
+        dossier: {
+          roleTitle: "La Finalista Envidiosa (¡ERES LA CULPABLE!)",
+          avatar: "🧶",
+          isCulprit: true,
+          movements: [
+            { time: "17:45", place: "Pasillo", detail: "Esperabas a que Don Prudencio saliera." },
+            { time: "17:50", place: "Camerino", detail: "Robaste los calcetines y dejaste la nota." },
+            { time: "17:52", place: "Pasillo", detail: "Saliste con los calcetines en la madeja." },
+            { time: "18:00", place: "Escenario", detail: "Fingiste sorpresa al ver descalzo a Don Prudencio." }
+          ],
+          knownInfo: [
+            "Llevas dos años perdiendo contra Don Prudencio.",
+            "Tejiste unos calcetines rojos idénticos para 'competir en igualdad'.",
+            "Puedes culpar al presentador diciendo que él quería cancelar el concurso."
+          ],
+          secretObjective: "Culpa al presentador y di que la madeja es para un jersey.",
+          suspicionNotes: "Di que la pelusa es de otra lana y que no entraste al camerino."
+        }
+      },
+      {
+        roleId: "rol_4",
+        roleName: "La Jurado Presidenta",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La jurado recuerda que los calcetines de Don Prudencio eran de lana roja."],
+        dossier: {
+          roleTitle: "El Ojo Textil",
+          avatar: "🧵",
+          isCulprit: false,
+          movements: [
+            { time: "17:30", place: "Mesa del Jurado", detail: "Repasando las puntuaciones." },
+            { time: "17:50", place: "Mesa del Jurado", detail: "Notaste la ausencia de Lorena." },
+            { time: "18:00", place: "Escenario", detail: "Puntuaste un cero a Don Prudencio." },
+            { time: "18:10", place: "Centro Cívico", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "Los calcetines de Don Prudencio eran de lana roja.",
+            "Lorena llevaba semanas preguntando por la lana de esos calcetines.",
+            "Tú no tocas los calcetines."
+          ],
+          secretObjective: "Declara que Lorena preguntaba por la lana de los calcetines.",
+          suspicionNotes: "El interés de Lorena por la lana es sospechoso."
+        }
+      },
+      {
+        roleId: "rol_5",
+        roleName: "La Compañera de Lorena",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La compañera oyó a Lorena decir: 'esta vez los calcetines no salen al escenario'."],
+        dossier: {
+          roleTitle: "La Oreja del Vestuario",
+          avatar: "👂",
+          isCulprit: false,
+          movements: [
+            { time: "17:40", place: "Vestuario", detail: "Oíste la frase de Lorena." },
+            { time: "17:50", place: "Vestuario", detail: "Viste a Lorena salir hacia el camerino." },
+            { time: "18:00", place: "Escenario", detail: "Te quedaste helada." },
+            { time: "18:10", place: "Centro Cívico", detail: "Contaste la frase." }
+          ],
+          knownInfo: [
+            "Oíste a Lorena decir: 'esta vez los calcetines no salen al escenario'.",
+            "Lo dijo a las 17:40 en el vestuario.",
+            "Tú no tocas los calcetines."
+          ],
+          secretObjective: "Declara la frase premonitoria de Lorena.",
+          suspicionNotes: "La frase demuestra premeditación."
+        }
+      },
+      {
+        roleId: "rol_6",
+        roleName: "El Conserje",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El conserje vio a Lorena entrar en el camerino a las 17:50."],
+        dossier: {
+          roleTitle: "El Hombre de las Llaves",
+          avatar: "🔑",
+          isCulprit: false,
+          movements: [
+            { time: "17:30", place: "Pasillo", detail: "Reponiendo el jabón de los baños." },
+            { time: "17:50", place: "Pasillo", detail: "Viste a Lorena entrar en el camerino." },
+            { time: "18:00", place: "Escenario", detail: "Acudiste al oír el revuelo." },
+            { time: "18:10", place: "Centro Cívico", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "Lorena entró en el camerino a las 17:50.",
+            "Don Prudencio estaba en el pasillo calentando los pies.",
+            "Tú no tocas los calcetines."
+          ],
+          secretObjective: "Declara que viste a Lorena entrar en el camerino.",
+          suspicionNotes: "La entrada de Lorena coincide con el robo."
+        }
+      },
+      {
+        roleId: "rol_7",
+        roleName: "La Limpiadora",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La limpiadora encontró pelusa de lana roja en el pasillo a las 17:55."],
+        dossier: {
+          roleTitle: "La Testigo de la Pelusa",
+          avatar: "🧽",
+          isCulprit: false,
+          movements: [
+            { time: "17:30", place: "Pasillo", detail: "Barriendo el pasillo." },
+            { time: "17:55", place: "Pasillo", detail: "Encontraste pelusa de lana roja." },
+            { time: "18:00", place: "Escenario", detail: "Viste a Don Prudencio descalzo." },
+            { time: "18:10", place: "Centro Cívico", detail: "Entregaste la pelusa." }
+          ],
+          knownInfo: [
+            "La pelusa de lana roja estaba en el pasillo a las 17:55.",
+            "La pelusa lleva hasta el vestuario de Lorena.",
+            "Tú no tocas los calcetines."
+          ],
+          secretObjective: "Entrega la pelusa de lana roja encontrada en el pasillo.",
+          suspicionNotes: "La pelusa conecta con la madeja de Lorena."
+        }
+      }
+    ])
+  },
+
+{
+    id: 20,
+    slug: "asesinato-en-el-faro",
+    title: "Asesinato en el Faro de Villafaro",
+    subtitle: "El farero aparece muerto en la sala de máquinas",
+    category: "Misterio Clásico",
+    emoji: "🗼",
+    location: "Faro de Villafaro, sala de máquinas",
+    incidentTime: "A las 03:00, en la madrugada",
+    synopsis:
+      "El farero Eustaquio aparece muerto en la sala de máquinas del faro, con la cabeza golpeada por la manivela del mecanismo de rotación. La puerta del faro estaba cerrada por dentro y la única llave la tenía él. Los pescadores del pueblo y el guardacostas quedan retenidos en el muelle.",
+    publicTimeline: [
+      { time: "02:30", description: "Eustaquio sube al faro para su ronda nocturna.", location: "Base del Faro" },
+      { time: "02:45", description: "Se ve la luz del faro parpadear y apagarse.", location: "Faro" },
+      { time: "03:00", description: "Se oye un golpe metálico en la sala de máquinas.", location: "Sala de Máquinas" },
+      { time: "03:15", description: "El guardacostas sube y encuentra el cuerpo.", location: "Sala de Máquinas" },
+      { time: "03:30", description: "Se retiene a los pescadores y al guardacostas.", location: "Muelle" }
+    ],
+    progressiveClues: [
+      {
+        minute: 3,
+        title: "La Manivela con Sangre y Sal",
+        badge: "PRUEBA 1 · MIN 3",
+        description: "La manivela del mecanismo tiene sangre y restos de sal marina. Alguien la usó para golpear a Eustaquio y luego intentó limpiarla con agua de mar.",
+        impactQuestion: "¿Quién tenía las manos saladas esa noche y acceso a la manivela?"
+      },
+      {
+        minute: 6,
+        title: "El Billete de Tren en el Bolsillo",
+        badge: "PRUEBA 2 · MIN 6",
+        description: "En el bolsillo de Eustaquio hay un billete de tren a la capital para esa misma mañana, con una nota: 'Eustaquio, te vas o te callas. El negocio del faro no admite testigos.'",
+        impactQuestion: "¿Quién quería que Eustaquio se callara sobre el negocio del faro?"
+      }
+    ],
+    interrogationQuestions: [
+      "¿Dónde estaba cada uno entre las 02:30 y las 03:15?",
+      "¿Quién tenía las manos saladas y acceso a la manivela?",
+      "¿Qué negocio turbio había en el faro?",
+      "¿Quién subió al faro antes del golpe?"
+    ],
+    solution: {
+      culpritNameRole: "Ramón (El Pescador Contrabandista / Papel 3)",
+      crimeTime: "02:50",
+      keyMethod: "Subió al faro por la escalera de servicio, discutió con Eustaquio por el contrabando que él había descubierto, lo golpeó con la manivela y limpió el arma con agua de mar antes de bajar.",
+      fullStory:
+        "Ramón usaba el faro como punto de descarga para su contrabando de tabaco. Eustaquio lo descubrió y amenazó con denunciarlo. Esa noche Ramón subió por la escalera de servicio, discutió con Eustaquio en la sala de máquinas, lo golpeó con la manivela y limpió el arma con agua de mar. Luego apagó la luz del faro para que su barco pudiera acercarse sin ser visto. El billete de tren era la oferta de soborno que Eustaquio había rechazado.",
+      criticalClues: [
+        "Tenía las manos saladas de manipular las redes y el contrabando.",
+        "Fue visto subir por la escalera de servicio a las 02:45.",
+        "El billete de tren era su soborno rechazado."
+      ]
+    },
+    dossiersByPlayerCount: adaptRolesForCount([
+      {
+        roleId: "rol_1",
+        roleName: "El Guardacostas",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El guardacostas encontró la manivela limpiada con agua de mar."],
+        dossier: {
+          roleTitle: "El Guardián de la Costa",
+          avatar: "⚓",
+          isCulprit: false,
+          movements: [
+            { time: "02:30", place: "Muelle", detail: "Vigilando la costa." },
+            { time: "02:45", place: "Muelle", detail: "Viste la luz del faro apagarse." },
+            { time: "03:15", place: "Sala de Máquinas", detail: "Subiste y encontraste el cuerpo." },
+            { time: "03:30", place: "Muelle", detail: "Retuviste a los pescadores." }
+          ],
+          knownInfo: [
+            "La manivela fue limpiada con agua de mar.",
+            "Viste a Ramón subir por la escalera de servicio a las 02:45.",
+            "Tú no tienes acceso a la sala de máquinas."
+          ],
+          secretObjective: "Declara que viste a Ramón subir por la escalera de servicio.",
+          suspicionNotes: "La subida de Ramón coincide con el crimen."
+        }
+      },
+      {
+        roleId: "rol_2",
+        roleName: "La Mujer del Farero",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La mujer del farero confirma que Eustaquio había descubierto un contrabando."],
+        dossier: {
+          roleTitle: "La Viuda del Faro",
+          avatar: "🕯️",
+          isCulprit: false,
+          movements: [
+            { time: "02:30", place: "Casa del Faro", detail: "Preparando café para Eustaquio." },
+            { time: "02:50", place: "Casa del Faro", detail: "Oíste un golpe metálico." },
+            { time: "03:15", place: "Sala de Máquinas", detail: "Subiste al oír el grito del guardacostas." },
+            { time: "03:30", place: "Muelle", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "Eustaquio había descubierto un contrabando en el faro.",
+            "Te dijo que 'Ramón le había ofrecido un billete de tren para callarse'.",
+            "Tú no subes a la sala de máquinas."
+          ],
+          secretObjective: "Declara que Eustaquio había descubierto el contrabando de Ramón.",
+          suspicionNotes: "El contrabando es el móvil."
+        }
+      },
+      {
+        roleId: "rol_3",
+        roleName: "Ramón",
+        isCulprit: true,
+        extraCluesIfFewerPlayers: ["Ramón tiene las manos saladas y una red con tabaco de contrabando."],
+        dossier: {
+          roleTitle: "El Pescador Contrabandista (¡ERES EL CULPABLE!)",
+          avatar: "🎣",
+          isCulprit: true,
+          movements: [
+            { time: "02:40", place: "Escalera de Servicio", detail: "Subiste al faro para hablar con Eustaquio." },
+            { time: "02:50", place: "Sala de Máquinas", detail: "Lo golpeaste con la manivela y limpiaste el arma con agua de mar." },
+            { time: "02:55", place: "Escalera de Servicio", detail: "Apagaste la luz del faro para que tu barco se acercara." },
+            { time: "03:30", place: "Muelle", detail: "Fingiste sorpresa." }
+          ],
+          knownInfo: [
+            "Usabas el faro para descargar tabaco de contrabando.",
+            "Eustaquio te descubrió y amenazó con denunciarte.",
+            "Puedes culpar al guardacostas diciendo que él también tenía acceso."
+          ],
+          secretObjective: "Culpa al guardacostas y di que tus manos están saladas por las redes.",
+          suspicionNotes: "Di que la red con tabaco es de otro pescador."
+        }
+      },
+      {
+        roleId: "rol_4",
+        roleName: "El Tabernero",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El tabernero oyó a Ramón decir: 'Eustaquio se va a callar para siempre'."],
+        dossier: {
+          roleTitle: "La Oreja del Puerto",
+          avatar: "🍺",
+          isCulprit: false,
+          movements: [
+            { time: "02:00", place: "Taberna", detail: "Cerrando el bar." },
+            { time: "02:20", place: "Taberna", detail: "Oíste la frase de Ramón." },
+            { time: "03:15", place: "Muelle", detail: "Te enteraste del crimen." },
+            { time: "03:30", place: "Muelle", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "Oíste a Ramón decir: 'Eustaquio se va a callar para siempre'.",
+            "Lo dijo a las 02:20 en la taberna.",
+            "Tú no subes al faro."
+          ],
+          secretObjective: "Declara la frase premonitoria de Ramón.",
+          suspicionNotes: "La frase demuestra premeditación."
+        }
+      },
+      {
+        roleId: "rol_5",
+        roleName: "El Pescador Joven",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El pescador joven vio a Ramón subir por la escalera de servicio a las 02:40."],
+        dossier: {
+          roleTitle: "El Aprendiz de las Olas",
+          avatar: "🌊",
+          isCulprit: false,
+          movements: [
+            { time: "02:30", place: "Muelle", detail: "Reparando las redes." },
+            { time: "02:40", place: "Muelle", detail: "Viste a Ramón subir por la escalera de servicio." },
+            { time: "03:15", place: "Muelle", detail: "Oíste el grito del guardacostas." },
+            { time: "03:30", place: "Muelle", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "Ramón subió por la escalera de servicio a las 02:40.",
+            "Llevaba una red con algo pesado.",
+            "Tú no subes al faro."
+          ],
+          secretObjective: "Declara que viste a Ramón subir con una red pesada.",
+          suspicionNotes: "La red pesada contiene el contrabando."
+        }
+      },
+      {
+        roleId: "rol_6",
+        roleName: "La Cocinera del Faro",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["La cocinera recuerda que Eustaquio le dijo: 'Ramón me ha amenazado'."],
+        dossier: {
+          roleTitle: "La Memoria de la Cocina",
+          avatar: "🍲",
+          isCulprit: false,
+          movements: [
+            { time: "02:00", place: "Cocina del Faro", detail: "Preparando la cena de Eustaquio." },
+            { time: "02:15", place: "Cocina del Faro", detail: "Eustaquio te dijo que Ramón lo había amenazado." },
+            { time: "03:15", place: "Cocina del Faro", detail: "Oíste el revuelo." },
+            { time: "03:30", place: "Muelle", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "Eustaquio te dijo que Ramón lo había amenazado.",
+            "Lo dijo a las 02:15 en la cocina.",
+            "Tú no subes a la sala de máquinas."
+          ],
+          secretObjective: "Declara la amenaza que Eustaquio te confesó.",
+          suspicionNotes: "La amenaza refuerza el móvil de Ramón."
+        }
+      },
+      {
+        roleId: "rol_7",
+        roleName: "El Practicante",
+        isCulprit: false,
+        extraCluesIfFewerPlayers: ["El practicante confirma que el golpe fue con la manivela y de frente."],
+        dossier: {
+          roleTitle: "El Sanitario del Pueblo",
+          avatar: "🩺",
+          isCulprit: false,
+          movements: [
+            { time: "02:30", place: "Casa", detail: "Durmiendo." },
+            { time: "03:15", place: "Sala de Máquinas", detail: "Examinaste el cuerpo." },
+            { time: "03:25", place: "Sala de Máquinas", detail: "Confirmaste el golpe con la manivela." },
+            { time: "03:30", place: "Muelle", detail: "Declaraste." }
+          ],
+          knownInfo: [
+            "El golpe fue con la manivela y de frente.",
+            "El agresor era más alto que Eustaquio.",
+            "Tú no subes al faro."
+          ],
+          secretObjective: "Confirma que el golpe fue de alguien más alto que Eustaquio.",
+          suspicionNotes: "Ramón es más alto que Eustaquio."
+        }
+      }
+    ])
   }
 ];
