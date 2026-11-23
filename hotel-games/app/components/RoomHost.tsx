@@ -158,6 +158,9 @@ export default function RoomHost({ onStartOnlineGame, onBack }: RoomHostProps) {
 
         peerInstance.on("error", (err: any) => {
           console.warn("PeerJS host warning/error:", err);
+          if (err?.type === "unavailable-id") {
+            console.warn("Código de sala ocupado en PeerJS");
+          }
         });
 
         (peerInstance as any)._heartbeatInterval = heartbeatInterval;

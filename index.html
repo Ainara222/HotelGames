@@ -3408,6 +3408,7 @@ var qrcode = function() {
       connectedPlayers: [],
       peerConnections: {}, // playerName -> DataConnection
       hostPeer: null,
+      hostPeerReady: false,
       selectedCaseId: 1,
       isRandomCase: false,
       timerMinutes: 15,
@@ -3455,22 +3456,8 @@ var qrcode = function() {
           { urls: "stun:stun3.l.google.com:19302" },
           { urls: "stun:stun4.l.google.com:19302" },
           { urls: "stun:stun.cloudflare.com:3478" },
-          { urls: "stun:openrelay.metered.ca:80" },
-          {
-            urls: "turn:openrelay.metered.ca:80",
-            username: "openrelayproject",
-            credential: "openrelayproject",
-          },
-          {
-            urls: "turn:openrelay.metered.ca:443",
-            username: "openrelayproject",
-            credential: "openrelayproject",
-          },
-          {
-            urls: "turn:openrelay.metered.ca:443?transport=tcp",
-            username: "openrelayproject",
-            credential: "openrelayproject",
-          },
+          { urls: "stun:stun.services.mozilla.com" },
+          { urls: "stun:stun.stunprotocol.org:3478" }
         ],
         iceCandidatePoolSize: 10,
       },
@@ -3492,6 +3479,8 @@ var qrcode = function() {
         state.hostPeer = new Peer(peerId, PEER_CONFIG);
         state.hostPeer.on("open", id => {
           console.log("Host room peer ready:", id);
+          state.hostPeerReady = true;
+          render();
         });
         state.hostPeer.on("disconnected", () => {
           console.warn("Host disconnected from signaling broker, reconnecting...");
@@ -3537,6 +3526,15 @@ var qrcode = function() {
         });
         state.hostPeer.on("error", err => {
           console.warn("Host peer warning:", err);
+          if (err && (err.type === "unavailable-id" || err.type === "network")) {
+            console.warn("Código en uso o error de red, regenerando código...");
+            if (state.hostPeer) { try { state.hostPeer.destroy(); } catch (e) {} }
+            state.hostPeer = null;
+            state.roomCode = generateRoomCode();
+            state.hostPeerReady = false;
+            initHostPeer();
+            render();
+          }
         });
       } catch (e) {
         console.error("PeerJS init error", e);
@@ -3840,9 +3838,18 @@ var qrcode = function() {
               <div class="bg-white p-3 rounded-2xl mx-auto w-64 h-64 flex items-center justify-center border-4 border-pink-500/40">
                 <img src="${roomQr}" alt="QR Sala" class="w-56 h-56 rounded-lg object-contain">
               </div>
-              <div class="p-3 rounded-2xl bg-purple-950/60 border border-purple-800">
+              <div class="p-3 rounded-2xl bg-purple-950/60 border border-purple-800 space-y-1">
                 <div class="text-[11px] text-purple-300 font-bold uppercase">Código para escribir:</div>
                 <div class="text-3xl font-black font-mono text-white tracking-widest neon-text-pink">${state.roomCode}</div>
+                <button type="button" onclick="
+                  if (state.hostPeer) { try { state.hostPeer.destroy(); } catch(e){} state.hostPeer = null; }
+                  state.roomCode = generateRoomCode();
+                  state.hostPeerReady = false;
+                  initHostPeer();
+                  render();
+                " class="text-[11px] text-pink-400 hover:text-pink-300 underline cursor-pointer">
+                  ↻ Generar otro código
+                </button>
               </div>
             </div>
 
@@ -3850,19 +3857,52 @@ var qrcode = function() {
               <div class="glass-panel p-6 rounded-3xl border border-purple-500/50">
                 <div class="flex items-center justify-between mb-4">
                   <h2 class="text-base font-extrabold text-white uppercase">Jugadoras Conectadas (${state.connectedPlayers.length}/7)</h2>
-                  <span class="text-xs text-green-400 font-bold">En vivo 🟢</span>
+                  ${state.hostPeerReady 
+                    ? `<span class="text-xs text-green-400 font-bold flex items-center gap-1">🟢 Sala lista en línea</span>`
+                    : `<span class="text-xs text-yellow-300 font-bold flex items-center gap-1 animate-pulse">🟡 Registrando sala...</span>`
+                  }
                 </div>
+
+                <div class="p-3 rounded-2xl bg-purple-950/40 border border-purple-800/80 flex items-center gap-2 mb-4">
+                  <input type="text" id="manualNameHostInput" placeholder="Añadir amiga manualmente..." class="flex-1 bg-purple-900/40 border border-purple-700/60 rounded-xl px-3 py-2 text-xs text-white">
+                  <button type="button" onclick="
+                    const inp = document.getElementById('manualNameHostInput');
+                    const val = inp ? inp.value.trim() : '';
+                    if (val && !state.connectedPlayers.includes(val) && state.connectedPlayers.length < 7) {
+                      sounds.playClick();
+                      state.connectedPlayers.push(val);
+                      render();
+                    }
+                  " class="px-3 py-2 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs cursor-pointer">
+                    ➕ Añadir
+                  </button>
+                  <button type="button" onclick="
+                    ['Marta', 'Paula', 'Saray'].forEach(n => {
+                      if (!state.connectedPlayers.includes(n) && state.connectedPlayers.length < 7) {
+                        state.connectedPlayers.push(n);
+                      }
+                    });
+                    sounds.playClick();
+                    render();
+                  " title="Añadir jugadoras de prueba si faltan amigas" class="px-2.5 py-2 rounded-xl bg-pink-900/50 hover:bg-pink-800 text-pink-300 border border-pink-700/50 text-xs font-bold cursor-pointer">
+                    🧪 Test (+3)
+                  </button>
+                </div>
+
                 ${state.connectedPlayers.length === 0 ? `
                   <div class="py-8 text-center border-2 border-dashed border-purple-900/60 rounded-2xl">
                     <p class="text-sm font-bold text-white">Esperando a que tus amigas se unan...</p>
-                    <p class="text-xs text-purple-300/70 mt-1">Apunta con la cámara al código QR de la izquierda.</p>
+                    <p class="text-xs text-purple-300/70 mt-1">Apunta con la cámara al código QR de la izquierda o escribe el código en el móvil.</p>
                   </div>
                 ` : `
                   <div class="grid grid-cols-2 gap-2 mb-4">
                     ${state.connectedPlayers.map((name, i) => `
                       <div class="p-2.5 rounded-xl bg-purple-950/60 border border-green-500/50 flex items-center justify-between text-xs">
                         <span class="font-bold text-white">${i + 1}. ${name}</span>
-                        <span class="text-[10px] text-green-400 font-bold">Conectada ✓</span>
+                        <div class="flex items-center gap-1.5">
+                          <span class="text-[10px] text-green-400 font-bold">Conectada ✓</span>
+                          <button type="button" onclick="state.connectedPlayers = state.connectedPlayers.filter(p => p !== '${name}'); render();" class="text-purple-400 hover:text-red-400 text-xs font-bold px-1 cursor-pointer" title="Quitar">✕</button>
+                        </div>
                       </div>
                     `).join('')}
                   </div>
@@ -3877,7 +3917,7 @@ var qrcode = function() {
               </div>
 
               <div class="flex items-center gap-3">
-                <button type="button" onclick="state.view = 'home_select'; render();" class="px-4 py-4 rounded-2xl bg-purple-950 text-purple-300 text-xs font-bold border border-purple-800 cursor-pointer">Volver</button>
+                <button type="button" onclick="if(state.hostPeer){ try{state.hostPeer.destroy();}catch(e){} state.hostPeer = null; state.hostPeerReady = false; } state.view = 'home_select'; render();" class="px-4 py-4 rounded-2xl bg-purple-950 text-purple-300 text-xs font-bold border border-purple-800 cursor-pointer">Volver</button>
                 <button type="button" onclick="startOnlineHostGame()" class="flex-1 py-4 rounded-2xl bg-gradient-to-r from-pink-600 via-purple-600 to-red-600 text-white font-black text-sm uppercase border border-white/40 shadow-2xl neon-glow-pink cursor-pointer">
                   🚀 ¡EMPEZAR PARTIDA Y ENVIAR FICHAS A LOS MÓVILES!
                 </button>
