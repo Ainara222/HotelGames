@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { CaseData, PlayerCount, ActivePlayer } from "../types/game";
 import { CASES } from "../data/cases";
 import { sounds } from "../utils/audio";
-import { generateRoomCode } from "../utils/roomNetwork";
+import { generateRoomCode, PEER_CONFIG } from "../utils/roomNetwork";
 import { generateQRDataUrl } from "../utils/qr";
 import {
   Users,
@@ -92,9 +92,7 @@ export default function RoomHost({ onStartOnlineGame, onBack }: RoomHostProps) {
 
         const peerId = `chivatazo-room-${roomCode.toLowerCase()}`;
 
-        peerInstance = new Peer(peerId, {
-          debug: 1,
-        });
+        peerInstance = new Peer(peerId, PEER_CONFIG);
 
         peerRef.current = peerInstance;
 
@@ -102,9 +100,36 @@ export default function RoomHost({ onStartOnlineGame, onBack }: RoomHostProps) {
           console.log("Host Peer opened with ID:", id);
         });
 
+        peerInstance.on("disconnected", () => {
+          console.warn("Host desconectado del broker de señalización, reconectando...");
+          try {
+            peerInstance.reconnect();
+          } catch {}
+        });
+
+        // Heartbeat keep-alive periódica para evitar cierre de NAT por operadores móviles (4G/5G)
+        const heartbeatInterval = setInterval(() => {
+          connectionsMap.current.forEach((conn) => {
+            if (conn && conn.open) {
+              try {
+                conn.send({ type: "PING" });
+              } catch {}
+            }
+          });
+        }, 5000);
+
         peerInstance.on("connection", (conn: any) => {
           conn.on("data", (data: any) => {
-            if (data && data.type === "JOIN" && data.playerName) {
+            if (!data) return;
+
+            if (data.type === "PING") {
+              try {
+                conn.send({ type: "PONG" });
+              } catch {}
+              return;
+            }
+
+            if (data.type === "JOIN" && data.playerName) {
               const name = data.playerName.trim();
 
               if (!name) return;
@@ -134,6 +159,8 @@ export default function RoomHost({ onStartOnlineGame, onBack }: RoomHostProps) {
         peerInstance.on("error", (err: any) => {
           console.warn("PeerJS host warning/error:", err);
         });
+
+        (peerInstance as any)._heartbeatInterval = heartbeatInterval;
       });
     }
 
@@ -141,6 +168,9 @@ export default function RoomHost({ onStartOnlineGame, onBack }: RoomHostProps) {
       isCancelled = true;
 
       if (peerInstance) {
+        if ((peerInstance as any)._heartbeatInterval) {
+          clearInterval((peerInstance as any)._heartbeatInterval);
+        }
         peerInstance.destroy();
       }
 

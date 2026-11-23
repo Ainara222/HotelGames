@@ -8,19 +8,13 @@ import {
   Clock,
   Play,
   Pause,
-  RotateCcw,
   Plus,
   ShieldAlert,
   HelpCircle,
-  FileText,
-  Lock,
-  Unlock,
   AlertTriangle,
   Eye,
   Vote,
-  Sparkles,
   MapPin,
-  ChevronRight
 } from "lucide-react";
 
 interface GameDashboardProps {
@@ -57,7 +51,7 @@ export default function GameDashboard({
 
   // Timer interval
   useEffect(() => {
-    let interval: any = null;
+    let interval: ReturnType<typeof setInterval> | null = null;
     if (isTimerRunning) {
       interval = setInterval(() => {
         setElapsedSeconds((prev) => {
@@ -94,7 +88,9 @@ export default function GameDashboard({
       }, 1000);
     }
 
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [isTimerRunning, isFreeTime, clue1Unlocked, clue2Unlocked, gameCase]);
 
   const formatTime = (secs: number) => {
@@ -239,7 +235,7 @@ export default function GameDashboard({
             type="button"
             onClick={() => {
               sounds.playClick();
-              setActiveTab(tab.id as any);
+              setActiveTab(tab.id as "timeline" | "clues" | "questions" | "dossiers");
             }}
             className={`px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all border cursor-pointer ${
               activeTab === tab.id
@@ -338,7 +334,7 @@ export default function GameDashboard({
               </div>
             ) : (
               <p className="text-xs text-purple-300/70 italic">
-                Esta prueba se revelará automáticamente a los 3 minutos de juego o si pulsáis "Revelar ya".
+                Esta prueba se revelará automáticamente a los 3 minutos de juego o si pulsáis &quot;Revelar ya&quot;.
               </p>
             )}
           </div>
@@ -386,7 +382,7 @@ export default function GameDashboard({
               </div>
             ) : (
               <p className="text-xs text-purple-300/70 italic">
-                Esta prueba se revelará automáticamente a los 6 minutos de juego o si pulsáis "Revelar ya".
+                Esta prueba se revelará automáticamente a los 6 minutos de juego o si pulsáis &quot;Revelar ya&quot;.
               </p>
             )}
           </div>

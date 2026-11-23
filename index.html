@@ -3418,7 +3418,10 @@ var qrcode = function() {
       playerNameInput: "",
       clientPeer: null,
       clientConn: null,
-      clientPhase: "input", // input, waiting, in_game, voting, resolution
+      clientPhase: "input", // input, connecting, waiting, in_game, voting, resolution
+      clientError: null,
+      hostHeartbeat: null,
+      clientHeartbeat: null,
       myDossier: null,
       myCaseInfo: null,
       isDossierRevealed: false,
@@ -3442,6 +3445,37 @@ var qrcode = function() {
       offlineCount: 7
     };
 
+    const PEER_CONFIG = {
+      debug: 1,
+      config: {
+        iceServers: [
+          { urls: "stun:stun.l.google.com:19302" },
+          { urls: "stun:stun1.l.google.com:19302" },
+          { urls: "stun:stun2.l.google.com:19302" },
+          { urls: "stun:stun3.l.google.com:19302" },
+          { urls: "stun:stun4.l.google.com:19302" },
+          { urls: "stun:stun.cloudflare.com:3478" },
+          { urls: "stun:openrelay.metered.ca:80" },
+          {
+            urls: "turn:openrelay.metered.ca:80",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+          {
+            urls: "turn:openrelay.metered.ca:443",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+          {
+            urls: "turn:openrelay.metered.ca:443?transport=tcp",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+        ],
+        iceCandidatePoolSize: 10,
+      },
+    };
+
     function checkUrlParams() {
       const params = new URLSearchParams(window.location.search);
       const roomParam = params.get("room");
@@ -3455,14 +3489,39 @@ var qrcode = function() {
       if (state.hostPeer) return;
       const peerId = "chivatazo-room-" + state.roomCode.toLowerCase();
       try {
-        state.hostPeer = new Peer(peerId, { debug: 1 });
+        state.hostPeer = new Peer(peerId, PEER_CONFIG);
         state.hostPeer.on("open", id => {
           console.log("Host room peer ready:", id);
         });
+        state.hostPeer.on("disconnected", () => {
+          console.warn("Host disconnected from signaling broker, reconnecting...");
+          try { state.hostPeer.reconnect(); } catch (e) {}
+        });
+
+        // Heartbeat periódico cada 5s para mantener abiertas las rutas NAT en redes móviles (4G/5G)
+        if (state.hostHeartbeat) clearInterval(state.hostHeartbeat);
+        state.hostHeartbeat = setInterval(() => {
+          if (state.peerConnections) {
+            Object.values(state.peerConnections).forEach(cn => {
+              if (cn && cn.open) {
+                try { cn.send({ type: "PING" }); } catch (e) {}
+              }
+            });
+          }
+        }, 5000);
+
         state.hostPeer.on("connection", conn => {
           conn.on("data", data => {
-            if (data && data.type === "JOIN" && data.playerName) {
+            if (!data) return;
+
+            if (data.type === "PING") {
+              try { conn.send({ type: "PONG" }); } catch (e) {}
+              return;
+            }
+
+            if (data.type === "JOIN" && data.playerName) {
               const name = data.playerName.trim();
+              if (!name) return;
               state.peerConnections[name] = conn;
               if (!state.connectedPlayers.includes(name)) {
                 sounds.playClick();
@@ -3470,7 +3529,7 @@ var qrcode = function() {
                 render();
               }
               conn.send({ type: "JOIN_ACCEPTED", roomCode: state.roomCode });
-            } else if (data && data.type === "SUBMIT_VOTE" && data.vote) {
+            } else if (data.type === "SUBMIT_VOTE" && data.vote) {
               state.votes.push(data.vote);
               render();
             }
@@ -3491,46 +3550,119 @@ var qrcode = function() {
       if (!name) { alert("Escribe tu nombre."); return; }
 
       sounds.playClick();
-      state.clientPhase = "waiting";
+      state.clientPhase = "connecting";
+      state.clientError = null;
       render();
+
+      if (state.clientPeer) {
+        try { state.clientPeer.destroy(); } catch (e) {}
+        state.clientPeer = null;
+      }
+      if (state.clientHeartbeat) {
+        clearInterval(state.clientHeartbeat);
+        state.clientHeartbeat = null;
+      }
 
       const randSuffix = Math.floor(Math.random() * 9000 + 1000);
       const clientPeerId = "chivatazo-player-" + code.toLowerCase() + "-" + name.toLowerCase().replace(/[^a-z0-9]/g, "") + "-" + randSuffix;
       const hostPeerId = "chivatazo-room-" + code.toLowerCase();
 
-      state.clientPeer = new Peer(clientPeerId, { debug: 1 });
-      state.clientPeer.on("open", () => {
-        state.clientConn = state.clientPeer.connect(hostPeerId, { reliable: true });
-        state.clientConn.on("open", () => {
-          state.clientConn.send({ type: "JOIN", playerName: name });
+      let isConnected = false;
+      const timeoutId = setTimeout(() => {
+        if (!isConnected) {
+          state.clientError = "Tiempo de espera agotado conectando con la sala " + code + ". Comprueba que la sala siga abierta en la tablet/pantalla de la anfitriona y vuelve a intentarlo.";
+          state.clientPhase = "input";
+          render();
+          try { state.clientPeer.destroy(); } catch (e) {}
+        }
+      }, 15000);
+
+      try {
+        state.clientPeer = new Peer(clientPeerId, PEER_CONFIG);
+        state.clientPeer.on("disconnected", () => {
+          console.warn("Cliente desconectado de señalización, reconectando...");
+          try { state.clientPeer.reconnect(); } catch (e) {}
         });
-        state.clientConn.on("data", data => {
-          if (!data) return;
-          if (data.type === "GAME_STARTED") {
-            sounds.playClueAlert();
-            state.myDossier = data.dossier;
-            state.myCaseInfo = data.gameCase;
-            state.clientPhase = "in_game";
+
+        state.clientPeer.on("open", () => {
+          const conn = state.clientPeer.connect(hostPeerId, { reliable: true });
+          state.clientConn = conn;
+
+          conn.on("open", () => {
+            isConnected = true;
+            clearTimeout(timeoutId);
+            conn.send({ type: "JOIN", playerName: name });
+            state.clientPhase = "waiting";
             render();
-          } else if (data.type === "VOTING_STARTED") {
-            sounds.playClick();
-            state.clientPhase = "voting";
-            state.hasVoted = false;
+
+            // Heartbeat de mantenimiento NAT para móvil (4G/5G)
+            state.clientHeartbeat = setInterval(() => {
+              if (conn && conn.open) {
+                try { conn.send({ type: "PING" }); } catch (e) {}
+              }
+            }, 5000);
+          });
+
+          conn.on("data", data => {
+            if (!data) return;
+
+            if (data.type === "PING") {
+              try { conn.send({ type: "PONG" }); } catch (e) {}
+              return;
+            }
+            if (data.type === "PONG") return;
+
+            if (data.type === "JOIN_ACCEPTED") {
+              state.clientPhase = "waiting";
+              render();
+            } else if (data.type === "GAME_STARTED") {
+              sounds.playClueAlert();
+              state.myDossier = data.dossier;
+              state.myCaseInfo = data.gameCase;
+              state.clientPhase = "in_game";
+              render();
+            } else if (data.type === "VOTING_STARTED") {
+              sounds.playClick();
+              state.clientPhase = "voting";
+              state.hasVoted = false;
+              render();
+            } else if (data.type === "GAME_RESOLUTION") {
+              sounds.playRevealFanfare();
+              state.clientPhase = "resolution";
+              state.resolutionInfo = data;
+              try { confetti({ particleCount: 120, spread: 90, origin: { y: 0.6 } }); } catch {}
+              render();
+            }
+          });
+
+          conn.on("error", err => {
+            console.error("Client conn error:", err);
+            clearTimeout(timeoutId);
+            if (state.clientHeartbeat) clearInterval(state.clientHeartbeat);
+            state.clientError = "Error de conexión con la sala " + code + ". Comprueba que el código sea correcto y la anfitriona tenga la sala abierta.";
+            state.clientPhase = "input";
             render();
-          } else if (data.type === "GAME_RESOLUTION") {
-            sounds.playRevealFanfare();
-            state.clientPhase = "resolution";
-            state.resolutionInfo = data;
-            try { confetti({ particleCount: 120, spread: 90, origin: { y: 0.6 } }); } catch {}
-            render();
-          }
+          });
+
+          conn.on("close", () => {
+            if (state.clientHeartbeat) clearInterval(state.clientHeartbeat);
+          });
         });
-      });
-      state.clientPeer.on("error", err => {
-        alert("No se pudo conectar a la sala. Comprueba el código.");
+
+        state.clientPeer.on("error", err => {
+          console.error("Client peer error:", err);
+          clearTimeout(timeoutId);
+          if (state.clientHeartbeat) clearInterval(state.clientHeartbeat);
+          state.clientError = "No se pudo conectar a la sala " + code + ". Comprueba que el código sea correcto.";
+          state.clientPhase = "input";
+          render();
+        });
+      } catch (e) {
+        clearTimeout(timeoutId);
+        state.clientError = "Error al iniciar conexión WebRTC.";
         state.clientPhase = "input";
         render();
-      });
+      }
     }
 
     function startOnlineHostGame() {
@@ -3765,6 +3897,15 @@ var qrcode = function() {
               <p class="text-xs text-purple-200 mt-1">Escribe el código de sala y tu nombre</p>
             </div>
             <div class="glass-panel p-6 rounded-3xl border border-pink-500/60 neon-glow-pink space-y-4">
+              ${state.clientError ? `
+                <div class="p-3.5 rounded-2xl bg-red-950/80 border border-red-500/80 text-xs text-red-200 space-y-1">
+                  <div class="font-bold flex items-center gap-1.5 text-red-300">
+                    <span>⚠️</span> Aviso de Conexión
+                  </div>
+                  <div>${state.clientError}</div>
+                </div>
+              ` : ''}
+
               <div>
                 <label class="block text-xs font-bold text-purple-300 uppercase mb-1">Código de Sala (4 letras)</label>
                 <input type="text" value="${state.joinRoomCodeInput}" oninput="state.joinRoomCodeInput = this.value.toUpperCase();" placeholder="Ej: IBIZ" maxlength="6" class="w-full bg-purple-950/60 border border-purple-800 rounded-xl p-3 text-2xl font-mono text-center font-black text-white uppercase focus:border-pink-500">
@@ -3778,6 +3919,26 @@ var qrcode = function() {
               </button>
               <button type="button" onclick="state.view = 'home_select'; render();" class="w-full py-2 text-center text-xs text-purple-300 hover:text-white underline cursor-pointer">
                 ← Volver al Menú
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      if (state.clientPhase === "connecting") {
+        return `
+          <div class="max-w-md mx-auto px-4 py-12 text-center">
+            <div class="glass-panel p-8 rounded-3xl border border-pink-500/60 neon-glow-pink space-y-4">
+              <div class="w-20 h-20 rounded-full bg-purple-950 border-2 border-pink-500 flex items-center justify-center mx-auto text-3xl animate-spin">
+                🔄
+              </div>
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-purple-950 text-pink-300 font-bold border border-pink-500/50 uppercase">CONECTANDO A LA SALA...</span>
+              <h2 class="text-2xl font-black text-white">Buscando sala <span class="neon-text-pink">${state.joinRoomCodeInput}</span></h2>
+              <div class="p-4 rounded-2xl bg-purple-950/60 border border-purple-800 text-xs text-purple-200">
+                ⏳ Conectando mediante servidores STUN/TURN globales (compatible con 4G, 5G y distintas redes WiFi)...
+              </div>
+              <button type="button" onclick="state.clientPhase = 'input'; if(state.clientPeer) state.clientPeer.destroy(); render();" class="mt-4 px-4 py-2 rounded-xl bg-purple-950/80 text-purple-300 text-xs border border-purple-800 hover:text-white cursor-pointer">
+                Cancelar
               </button>
             </div>
           </div>

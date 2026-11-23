@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { CaseData, PlayerCount } from "../types/game";
 import { CASES } from "../data/cases";
 import { sounds } from "../utils/audio";
@@ -19,23 +19,23 @@ const DEFAULT_NAMES = ["Ainara", "Saray", "Marta", "Paula", "Elena", "Claudia", 
 
 export default function Lobby({ onStartGame }: LobbyProps) {
   const [playerCount, setPlayerCount] = useState<PlayerCount>(7);
-  const [playerNames, setPlayerNames] = useState<string[]>(DEFAULT_NAMES);
+  const [playerNames, setPlayerNames] = useState<string[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("chivatazo_player_names");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length >= 7) {
+            return parsed;
+          }
+        }
+      } catch {}
+    }
+    return DEFAULT_NAMES;
+  });
   const [selectedCaseId, setSelectedCaseId] = useState<number>(1);
   const [isRandomCase, setIsRandomCase] = useState<boolean>(false);
   const [timerMinutes, setTimerMinutes] = useState<number>(15); // 15 mins default
-
-  // Load saved names from localStorage if available
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("chivatazo_player_names");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length >= 7) {
-          setPlayerNames(parsed);
-        }
-      }
-    } catch {}
-  }, []);
 
   const handleNameChange = (index: number, val: string) => {
     const updated = [...playerNames];

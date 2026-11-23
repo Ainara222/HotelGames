@@ -1,5 +1,36 @@
 import { ActivePlayer, CaseData, PlayerVote, PlayerScore } from "../types/game";
 
+export const PEER_CONFIG = {
+  debug: 1,
+  config: {
+    iceServers: [
+      { urls: "stun:stun.l.google.com:19302" },
+      { urls: "stun:stun1.l.google.com:19302" },
+      { urls: "stun:stun2.l.google.com:19302" },
+      { urls: "stun:stun3.l.google.com:19302" },
+      { urls: "stun:stun4.l.google.com:19302" },
+      { urls: "stun:stun.cloudflare.com:3478" },
+      { urls: "stun:openrelay.metered.ca:80" },
+      {
+        urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject",
+        credential: "openrelayproject",
+      },
+      {
+        urls: "turn:openrelay.metered.ca:443",
+        username: "openrelayproject",
+        credential: "openrelayproject",
+      },
+      {
+        urls: "turn:openrelay.metered.ca:443?transport=tcp",
+        username: "openrelayproject",
+        credential: "openrelayproject",
+      },
+    ],
+    iceCandidatePoolSize: 10,
+  },
+};
+
 // Generate a random 4-character room code (e.g. "IBZ4", "CHIV", "ROMA")
 export function generateRoomCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -11,6 +42,8 @@ export function generateRoomCode(): string {
 }
 
 export type NetworkMessage =
+  | { type: "PING" }
+  | { type: "PONG" }
   | { type: "JOIN"; playerName: string }
   | { type: "JOIN_ACCEPTED"; roomCode: string; playersCount: number }
   | {

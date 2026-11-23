@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { sounds } from "../utils/audio";
+import { PEER_CONFIG } from "../utils/roomNetwork";
 import {
   Smartphone,
   Sparkles,
@@ -77,8 +78,28 @@ export default function RoomJoin({ initialRoomCode = "", onBackToMenu }: RoomJoi
       const randomSuffix = Math.floor(Math.random() * 9000 + 1000);
       const myPeerId = `chivatazo-player-${code.toLowerCase()}-${name.toLowerCase().replace(/[^a-z0-9]/g, "")}-${randomSuffix}`;
 
-      const peer = new Peer(myPeerId, { debug: 1 });
+      if (peerRef.current) {
+        try { peerRef.current.destroy(); } catch {}
+      }
+
+      const peer = new Peer(myPeerId, PEER_CONFIG);
       peerRef.current = peer;
+
+      let hasConnected = false;
+      let pingInterval: ReturnType<typeof setInterval> | null = null;
+
+      const timeoutId = setTimeout(() => {
+        if (!hasConnected) {
+          setConnectionError(`Tiempo de espera agotado conectando con la sala ${code}. Comprueba que la sala esté abierta en la tablet/pantalla de la anfitriona.`);
+          setClientState("input");
+          try { peer.destroy(); } catch {}
+        }
+      }, 15000);
+
+      peer.on("disconnected", () => {
+        console.warn("Cliente desconectado del broker de señalización, reconectando...");
+        try { peer.reconnect(); } catch {}
+      });
 
       peer.on("open", () => {
         const hostPeerId = `chivatazo-room-${code.toLowerCase()}`;
@@ -86,17 +107,36 @@ export default function RoomJoin({ initialRoomCode = "", onBackToMenu }: RoomJoi
         connRef.current = conn;
 
         conn.on("open", () => {
+          hasConnected = true;
+          clearTimeout(timeoutId);
           conn.send({
             type: "JOIN",
             playerName: name,
           });
           setClientState("waiting");
+
+          // Keep-alive heartbeat cada 5s para evitar desconexiones en redes móviles (4G/5G)
+          pingInterval = setInterval(() => {
+            if (conn && conn.open) {
+              try { conn.send({ type: "PING" }); } catch {}
+            }
+          }, 5000);
         });
 
         conn.on("data", (data: any) => {
           if (!data) return;
 
-          if (data.type === "GAME_STARTED") {
+          if (data.type === "PING") {
+            try { conn.send({ type: "PONG" }); } catch {}
+            return;
+          }
+          if (data.type === "PONG") {
+            return;
+          }
+
+          if (data.type === "JOIN_ACCEPTED") {
+            setClientState("waiting");
+          } else if (data.type === "GAME_STARTED") {
             sounds.playClueAlert();
             setMyDossier(data.dossier);
             setGameCase(data.gameCase);
@@ -118,14 +158,22 @@ export default function RoomJoin({ initialRoomCode = "", onBackToMenu }: RoomJoi
 
         conn.on("error", (err: any) => {
           console.error("Connection error:", err);
-          setConnectionError("Error de conexión con la sala.");
+          clearTimeout(timeoutId);
+          if (pingInterval) clearInterval(pingInterval);
+          setConnectionError("Error de conexión P2P con la sala. Revisa tu conexión a internet o el código.");
           setClientState("input");
+        });
+
+        conn.on("close", () => {
+          if (pingInterval) clearInterval(pingInterval);
         });
       });
 
       peer.on("error", (err: any) => {
         console.error("Peer error:", err);
-        setConnectionError("No se pudo conectar a la sala. Verifica el código.");
+        clearTimeout(timeoutId);
+        if (pingInterval) clearInterval(pingInterval);
+        setConnectionError(`No se pudo conectar a la sala ${code}. Verifica que el código sea correcto.`);
         setClientState("input");
       });
     });
